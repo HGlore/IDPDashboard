@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@media (min-width : 0px) and (max-width : 639px) {
+    .xsm-hidden {
+        @apply hidden;
+    }
+
+    .xsm-height {
+        @apply h-72;
+    }
+
+    .xsm-grid-cols-span-2 {
+        @apply col-span-2;
+    }
+}
