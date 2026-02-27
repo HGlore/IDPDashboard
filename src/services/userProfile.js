@@ -16,6 +16,6 @@ export const getProfileImage = async () => {
         };
     } catch (err) {
         console.error("GetProfileImage error:", err.response?.status);
-        return { success: false };
+        return {success: false};
     }
 };

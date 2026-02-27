@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FieldCard = ({name, value, placeholder, fieldWidth}) => {
+const FieldCard = ({ name, value, placeholder, fieldWidth }) => {
     return (
         <div className="flex flex-col m-1 w-full">
             {/* Label on top */}
@@ -11,7 +11,7 @@ const FieldCard = ({name, value, placeholder, fieldWidth}) => {
                 type="text"
                 defaultValue={value}
                 placeholder={placeholder}
-                style={{width: fieldWidth || "100%"}}
+                style={{ width: fieldWidth || "100%" }}
                 className="border rounded-sm p-2 outline-none w-full"
             />
         </div>

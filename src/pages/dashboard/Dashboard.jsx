@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import {MdAddPhotoAlternate, MdAssignmentTurnedIn, MdOutlineImage} from "react-icons/md";
 import TopCard from "./components/TopCard";
 import {ImagesCountStatus} from "../../services/ImagesCountStatus";
-import {DateFormatter} from "../../services/DateFormatter";
+import {DateFormatter} from "../../utils/DateFormatter.js";
 import LineStatistics from "./components/LineStatistics";
 import PieStatistics from "./components/PieStatistics";
 import HelloCard from "./components/HelloCard";
