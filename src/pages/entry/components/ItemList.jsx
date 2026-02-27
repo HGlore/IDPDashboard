@@ -1,10 +1,12 @@
 import React, {useState} from "react";
-import {FiEdit, FiTrash2, FiPlus} from "react-icons/fi";
+import {FiEdit, FiTrash2, FiPlus, FiEye} from "react-icons/fi";
+import {sweetShowWarning} from "../../../utils/ShowAlert.js";
+import ItemModal from "./ItemModal.jsx";
 
 const initialItems = [
     {
         id: 1,
-        pallet: "1",
+        pallet: "13",
         handlingUnit: "Pallet",
         packageType: "Boxes",
         pieces: "1",
@@ -138,9 +140,42 @@ const initialItems = [
 
 export default function ItemList() {
     const [items, setItems] = useState(initialItems);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMode, setModalMode] = useState("add");
+    const [selectedItem, setSelectedItem] = useState(null);
 
-    const handleRemove = (id) => {
-        setItems(items.filter((item) => item.id !== id));
+    const handleRemove = async (id) => {
+        const result = await sweetShowWarning("Are you sure you want to remove this item?");
+
+        if (result.isConfirmed) {
+            setItems(items.filter((item) => item.id !== id));
+        }
+    };
+
+    const openAdd = () => {
+        setModalMode("add");
+        setSelectedItem(null);
+        setIsModalOpen(true);
+    };
+
+    const openEdit = (item) => {
+        setModalMode("edit");
+        setSelectedItem(item);
+        setIsModalOpen(true);
+    };
+
+    const openView = (item) => {
+        setModalMode("view");
+        setSelectedItem(item);
+        setIsModalOpen(true);
+    };
+
+    const handleSave = (data) => {
+        if (modalMode === "add") {
+            setItems([...items, {...data, id: Date.now()}]);
+        } else if (modalMode === "edit") {
+            setItems(items.map(i => i.id === selectedItem.id ? {...i, ...data} : i));
+        }
     };
 
     return (
@@ -158,6 +193,7 @@ export default function ItemList() {
                 </div>
 
                 <button
+                    onClick={openAdd}
                     className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                     <FiPlus className="text-lg"/>
@@ -211,7 +247,7 @@ export default function ItemList() {
                             className="group border-b last:border-none hover:bg-blue-50/40 transition-all duration-300"
                         >
                             <td className="px-4 py-2 align-middle">
-                                #{item.id}
+                                #{index + 1}
                             </td>
 
                             <td className="px-4 py-2 align-middle">{item.pallet}</td>
@@ -233,7 +269,7 @@ export default function ItemList() {
                             </td>
 
                             <td className="px-4 py-2 align-middle">
-                                {item.weight} kg
+                                {item.weight}
                             </td>
 
                             <td className="px-4 py-2 align-middle">
@@ -248,9 +284,16 @@ export default function ItemList() {
                             {/* Actions */}
                             <td className="px-4 py-2 align-middle">
                                 <div
-                                    className="flex gap-2 opacity-70 group-hover:opacity-100 transition-all duration-200">
+                                    className="flex gap-2 opacity-50 group-hover:opacity-100 transition-all duration-200">
 
                                     <button
+                                        onClick={() => openView(item)}
+                                        className="p-2 rounded-lg hover:bg-green-200 text-green-800 hover:scale-110 transition-all">
+                                        <FiEye/>
+                                    </button>
+
+                                    <button
+                                        onClick={() => openEdit(item)}
                                         className="p-2 rounded-lg hover:bg-blue-100 text-blue-600 hover:scale-110 transition-all">
                                         <FiEdit/>
                                     </button>
@@ -261,7 +304,6 @@ export default function ItemList() {
                                     >
                                         <FiTrash2/>
                                     </button>
-
                                 </div>
                             </td>
                         </tr>
@@ -273,8 +315,16 @@ export default function ItemList() {
             {/* Footer Info */}
             <div className="mt-4 text-sm text-slate-500 flex justify-between">
                 <span>Total Items: {items.length}</span>
-                <span className="italic">Double-click row to view details</span>
+                {/*<span className="italic">Double-click row to view details</span>*/}
             </div>
+
+            <ItemModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleSave}
+                mode={modalMode}
+                itemData={selectedItem}
+            />
         </div>
     );
 }
