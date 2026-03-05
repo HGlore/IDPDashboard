@@ -1,12 +1,12 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {motion} from "framer-motion";
-import {LoginService} from "../services/LoginSevice";
-import {toastShowError, toastShowSuccess} from "../utils/Toast.js";
-import {getProfileImage} from "../services/userProfile.js";
-import {Database} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { LoginService } from "../services/LoginSevice";
+import { toastShowError, toastShowSuccess } from "../utils/Toast.js";
+import { getProfileImage } from "../services/UserService.js";
+import { Database } from "lucide-react";
 
-const LoginPage = ({setUserData, setLoggedIn}) => {
+const LoginPage = ({ setUserData, setLoggedIn }) => {
     const navigate = useNavigate();
     const [companyID, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -47,30 +47,30 @@ const LoginPage = ({setUserData, setLoggedIn}) => {
 
             {/* Animated Container */}
             <motion.div
-                initial={{opacity: 0, y: 40, scale: 0.96}}
-                animate={{opacity: 1, y: 0, scale: 1}}
-                transition={{duration: 0.6, ease: "easeOut"}}
+                initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-96 bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl shadow-gray-400 border border-gray-100"
             >
 
                 {/* Header */}
                 <div className="text-center mb-8">
                     <motion.div
-                        initial={{scale: 0.8, opacity: 0}}
-                        animate={{scale: 1, opacity: 1}}
-                        transition={{delay: 0.2, duration: 0.4}}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.2, duration: 0.4 }}
                         className="flex items-center justify-center gap-2"
                     >
-                        <Database className="w-7 h-7 text-blue-600"/>
+                        <Database className="w-7 h-7 text-blue-600" />
                         <h2 className="text-3xl font-extrabold text-gray-800">
                             IDP
                         </h2>
                     </motion.div>
 
                     <motion.p
-                        initial={{opacity: 0}}
-                        animate={{opacity: 1}}
-                        transition={{delay: 0.3}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
                         className="text-sm text-gray-500 mt-1"
                     >
                         Intelligent Data Platform
@@ -93,8 +93,8 @@ const LoginPage = ({setUserData, setLoggedIn}) => {
                     {/* Username */}
                     <motion.div
                         variants={{
-                            hidden: {opacity: 0, y: 20},
-                            visible: {opacity: 1, y: 0}
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0 }
                         }}
                         className="mb-5"
                     >
@@ -115,8 +115,8 @@ const LoginPage = ({setUserData, setLoggedIn}) => {
                     {/* Password */}
                     <motion.div
                         variants={{
-                            hidden: {opacity: 0, y: 20},
-                            visible: {opacity: 1, y: 0}
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0 }
                         }}
                         className="mb-6"
                     >
@@ -140,8 +140,8 @@ const LoginPage = ({setUserData, setLoggedIn}) => {
                     {/* Button */}
                     <motion.button
                         variants={{
-                            hidden: {opacity: 0, y: 20},
-                            visible: {opacity: 1, y: 0}
+                            hidden: { opacity: 0, y: 20 },
+                            visible: { opacity: 1, y: 0 }
                         }}
                         onClick={handleLogin}
                         disabled={loading}
@@ -156,9 +156,9 @@ const LoginPage = ({setUserData, setLoggedIn}) => {
 
                 {/* Footer */}
                 <motion.p
-                    initial={{opacity: 0}}
-                    animate={{opacity: 1}}
-                    transition={{delay: 0.5}}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
                     className="mt-5 text-center text-xs text-gray-400"
                 >
                     Secure access to your system

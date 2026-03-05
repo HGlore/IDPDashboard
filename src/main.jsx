@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import "sweetalert2/dist/sweetalert2.min.css";
 import './index.css'
 import axios from "axios";
-import Routing from './Routing';
+import Routing from './routing';
 
 axios.defaults.withCredentials = true;
 

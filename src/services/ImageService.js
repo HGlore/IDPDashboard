@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const ImagesCountStatus = async (date) => {
     try {
-        const response = await axios.get("http://localhost:8080/getImages", {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/images`, {
             params: { storedDate: date }, // send query param
             headers: { "Content-Type": "application/json" },
             withCredentials: true,

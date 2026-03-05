@@ -3,7 +3,7 @@ import axios from "axios";
 export const LoginService = async (companyID, password) => {
     try {
         const response = await axios.post(
-            "http://localhost:8080/login",
+            `${import.meta.env.VITE_API_BASE_URL}/login`,
             { companyID, password },
             {
                 headers: { "Content-Type": "application/json" },

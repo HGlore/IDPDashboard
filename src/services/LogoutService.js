@@ -3,7 +3,7 @@ import axios from "axios";
 export const LogoutService = async () => {
     try {
         const response = await axios.post(
-            "http://localhost:8080/userout",
+            `${import.meta.env.VITE_API_BASE_URL}/userout`, 
             {},                     // empty body
             { withCredentials: true }
         );

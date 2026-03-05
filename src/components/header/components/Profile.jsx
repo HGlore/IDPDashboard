@@ -1,13 +1,13 @@
-import {useEffect, useState} from 'react'
-import {getProfileImage} from '../../../services/userProfile'
+import { useEffect, useState } from 'react'
+import { getProfileImage } from '../../../services/UserService'
 import {
     MdKeyboardArrowDown, MdKeyboardArrowRight
 } from 'react-icons/md'
 
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DrawerLog from './DrawerLog';
 
-const Profile = ({userData}) => {
+const Profile = ({ userData }) => {
     const [image, setImage] = useState(null);
     const [isOpenLog, setIsOpenLog] = useState(false);
 
@@ -42,16 +42,16 @@ const Profile = ({userData}) => {
                 onClick={toggleDrawer}
                 className="text-slate-700 p-1.5 hover:text-slate-400 cursor-pointer flex items-center"
             >
-                {isOpenLog ? <MdKeyboardArrowDown/> : <MdKeyboardArrowRight/>}
+                {isOpenLog ? <MdKeyboardArrowDown /> : <MdKeyboardArrowRight />}
             </button>
 
             <div
                 className={`
-                    overflow-hidden transition-all duration-600 ease-in-out
+                    overflow-hidden transition-all duration-300 ease-in-out
                     ${isOpenLog ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
                     `}
             >
-                <DrawerLog/>
+                <DrawerLog />
             </div>
         </div>
     </div>)

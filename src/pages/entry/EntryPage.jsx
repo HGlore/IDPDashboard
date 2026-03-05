@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import DocumentFields from "./components/DocumentFields";
 import PartyFields from "./components/PartyFields.jsx";
-import {ArrowLeft, ArrowRight} from "lucide-react";
-import {motion, AnimatePresence} from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import EntryHeader from "./components/EntryHeader.jsx";
 import ItemList from "./components/ItemList.jsx";
 import ImageViewer from "./components/ImageViewer.jsx";
@@ -13,10 +13,10 @@ const EntryPage = () => {
     const [showItemList, setShowItemList] = useState(false);
 
     const pages = [
-        {id: 0, component: <DocumentFields titleName="Documents"/>},
-        {id: 1, component: <PartyFields titleName="Shipper"/>},
-        {id: 2, component: <PartyFields titleName="Consignee"/>},
-        {id: 3, component: <PartyFields titleName="Bill-To"/>},
+        { id: 0, component: <DocumentFields titleName="Documents" /> },
+        { id: 1, component: <PartyFields titleName="Shipper" /> },
+        { id: 2, component: <PartyFields titleName="Consignee" /> },
+        { id: 3, component: <PartyFields titleName="Bill-To" /> },
     ];
 
     const handleNext = () => {
@@ -42,15 +42,15 @@ const EntryPage = () => {
     };
 
     const pageVariants = {
-        enter: (dir) => ({x: dir > 0 ? 400 : -400, opacity: 0, scale: 0.98}),
-        center: {x: 0, opacity: 1, scale: 1},
-        exit: (dir) => ({x: dir > 0 ? -400 : 400, opacity: 0, scale: 0.98}),
+        enter: (dir) => ({ x: dir > 0 ? 400 : -400, opacity: 0, scale: 0.98 }),
+        center: { x: 0, opacity: 1, scale: 1 },
+        exit: (dir) => ({ x: dir > 0 ? -400 : 400, opacity: 0, scale: 0.98 }),
     };
 
     const variants = {
-        enter: (dir) => ({x: dir > 0 ? 300 : -300, opacity: 0}),
-        center: {x: 0, opacity: 1},
-        exit: (dir) => ({x: dir > 0 ? -300 : 300, opacity: 0}),
+        enter: (dir) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
+        center: { x: 0, opacity: 1 },
+        exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
     };
 
     return (
@@ -75,11 +75,11 @@ const EntryPage = () => {
                             initial="enter"
                             animate="center"
                             exit="exit"
-                            transition={{duration: 0.4, ease: "easeInOut"}}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
                             className="absolute inset-0 flex flex-col bg-white/70 rounded-2xl shadow-lg overflow-hidden"
                         >
                             <div className="flex-1 overflow-y-auto p-4">
-                                <ItemList/>
+                                <ItemList />
                             </div>
 
                             {/* Bottom Button */}
@@ -88,7 +88,7 @@ const EntryPage = () => {
                                     onClick={handleBackToForm}
                                     className="w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200"
                                 >
-                                    <ArrowLeft size={20}/>
+                                    <ArrowLeft size={20} />
                                 </button>
                             </div>
                         </motion.div>
@@ -100,12 +100,12 @@ const EntryPage = () => {
                             initial="enter"
                             animate="center"
                             exit="exit"
-                            transition={{duration: 0.4, ease: "easeInOut"}}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
                             className="absolute inset-0 flex gap-5"
                         >
                             {/* Left Panel */}
                             <div className="w-1/2 rounded-2xl border border-gray-200 shadow-inner">
-                                <ImageViewer/>
+                                <ImageViewer />
                             </div>
 
                             {/* Right Panel */}
@@ -119,7 +119,7 @@ const EntryPage = () => {
                                             initial="enter"
                                             animate="center"
                                             exit="exit"
-                                            transition={{duration: 0.5}}
+                                            transition={{ duration: 0.5 }}
                                             className="absolute top-0 left-0 w-full"
                                         >
                                             {pages[currentStep].component}
@@ -130,18 +130,17 @@ const EntryPage = () => {
                                 <div className="flex justify-between mt-2">
                                     <button
                                         onClick={handlePrev}
-                                        className={`w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200 ${
-                                            currentStep === 0 ? "invisible" : ""
-                                        }`}
+                                        className={`w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200 ${currentStep === 0 ? "invisible" : ""
+                                            }`}
                                     >
-                                        <ArrowLeft size={20}/>
+                                        <ArrowLeft size={20} />
                                     </button>
 
                                     <button
                                         onClick={handleNext}
                                         className="w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200"
                                     >
-                                        <ArrowRight size={20}/>
+                                        <ArrowRight size={20} />
                                     </button>
                                 </div>
                             </div>
