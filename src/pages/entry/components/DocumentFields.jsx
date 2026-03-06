@@ -28,7 +28,7 @@ const DocumentFields = ({ titleName }) => {
     return (
         <div className="p-4 border rounded-md shadow-sm bg-white">
             {titleName && (
-                <h2 className="flex text-lg font-bold text-gray-800 mb-2 justify-center">{titleName}</h2>
+                <h2 className="fl text-lg font-bold text-gray-800 mb-2 justify-center">{titleName}</h2>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

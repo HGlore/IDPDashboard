@@ -8,7 +8,7 @@ import LineStatistics from "./components/LineStatistics";
 import PieStatistics from "./components/PieStatistics";
 import HelloCard from "./components/HelloCard";
 
-const Dashboard = ({ date }) => {
+const Dashboard = ({ date, userData }) => {
     const [imageCounts, setImageCounts] = useState({
         totalQueue: 0,
         newImages: 0,
@@ -19,7 +19,7 @@ const Dashboard = ({ date }) => {
         const fetchCounts = async () => {
             try {
                 const formattedDate = DateFormatter(date);
-                const data = await ImagesCountStatus(formattedDate);
+                const data = await ImagesCountStatus(formattedDate, userData);
                 setImageCounts(data);
             } catch (err) {
                 console.error("Error fetching image counts:", err);

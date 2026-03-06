@@ -1,11 +1,12 @@
 import axios from "axios";
+import { API } from "../utils/API";
 
 export const LogoutService = async () => {
     try {
         const response = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/userout`, 
+            `${API.LOCAL_URL}/userout`,
             {},                     // empty body
-            { withCredentials: true }
+            {withCredentials: true}
         );
         return response.data; // "Logged out successfully"
     } catch (error) {

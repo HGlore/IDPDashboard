@@ -1,16 +1,17 @@
 import axios from "axios";
+import { API } from "../utils/API";
 
-export const ImagesCountStatus = async (date) => {
+export const ImagesCountStatus = async (date, userData) => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/images`, {
-            params: { storedDate: date }, // send query param
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-        });
+        const response = await axios.post(`${API.LOCAL_URL}/images`,
+            { storedDate: date, user: userData }, // JSON body
+            {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true,
+            }
+        );
         return response.data;
     } catch (error) {
-        if (error.response) throw error.response.data;
-        else if (error.request) throw "No response from server.";
-        else throw error.message;
+        throw error.message;
     }
 };

@@ -1,18 +1,18 @@
 import axios from "axios";
+import { API } from "../utils/API";
 
 export const CheckAuth = async () => {
     try {
         const res = await axios.get(
-            `${import.meta.env.VITE_}/api/me`,
+            `${API.LOCAL_URL}/api/me`,
             {
-                withCredentials: true,
-                headers: { "Content-Type": "application/json" }
+                withCredentials: true
             }
         );
 
         return { loggedIn: true, user: res.data };
     } catch (err) {
-        console.error("error:", err.response?.status);
+        /* console.error("error:", err.response?.status); */
         return { loggedIn: false };
     }
 };

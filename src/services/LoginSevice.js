@@ -1,9 +1,10 @@
 import axios from "axios";
+import { API } from "../utils/API";
 
 export const LoginService = async (companyID, password) => {
     try {
         const response = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/login`,
+            `${API.LOCAL_URL}/login`,
             { companyID, password },
             {
                 headers: { "Content-Type": "application/json" },

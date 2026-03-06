@@ -1,8 +1,9 @@
 import axios from "axios";
+import { API } from "../utils/API";
 
 export const getProfileImage = async () => {
     try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/profile/image`, {
+        const res = await axios.get(`${API.LOCAL_URL}/api/profile/image`, {
             responseType: "blob",
             withCredentials: true,
         });
@@ -16,7 +17,7 @@ export const getProfileImage = async () => {
             imageUrl: URL.createObjectURL(res.data),
         };
     } catch (err) {
-        console.error("error:", err);
+        /* console.error("error:", err); */
 
         if (axios.isAxiosError(err)) {
             return {
