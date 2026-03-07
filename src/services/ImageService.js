@@ -12,6 +12,6 @@ export const ImagesCountStatus = async (date, userData) => {
         );
         return response.data;
     } catch (error) {
-        throw error.message;
+        throw new Error(error.response?.data?.message || error.message);
     }
 };
