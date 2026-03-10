@@ -1,11 +1,11 @@
 import React from 'react';
 import { MdLogout } from 'react-icons/md';
-import { LogoutService } from '../../../services/LogoutService';
+import * as authApi from "../../../api/authAPI"
 
 const DrawerLog = () => {
     const handleLogout = async () => {
         try {
-            await LogoutService();
+            await authApi.Logout();
             window.location.reload();
         } catch (err) {
             console.error("Logout error:", err);

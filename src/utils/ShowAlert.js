@@ -1,12 +1,13 @@
 import Swal from "sweetalert2";
 
-export const sweetShowWarning = async (title, message) => {
+export const sweetShowMessage = async (icon, title, message, confirmButtonText, cancelButtonText) => {
     return  Swal.fire({
-        title: title,
+        icon: icon, // 'success', 'error', 'warning', 'info', 'question'
+        title: title, // The main bold title
         text: message,
-        icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Remove Item",
-        cancelButtonText: "Cancel"
+        showConfirmButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: cancelButtonText
     });
 };

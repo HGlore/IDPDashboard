@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {FiEdit, FiTrash2, FiPlus, FiEye} from "react-icons/fi";
-import {sweetShowWarning} from "../../../utils/ShowAlert.js";
+import React, { useState } from "react";
+import { FiEdit, FiTrash2, FiPlus, FiEye } from "react-icons/fi";
+import { sweetShowMessage } from "../../../utils/ShowAlert.js";
 import ItemModal from "./ItemModal.jsx";
 
 const initialItems = [
@@ -145,7 +145,8 @@ export default function ItemList() {
     const [selectedItem, setSelectedItem] = useState(null);
 
     const handleRemove = async (id) => {
-        const result = await sweetShowWarning("Are you sure you want to remove this item?");
+        const result = await sweetShowMessage("warning", "Remove Item:",
+            "Are you sure you want to remove this item?", "Remove", "Cancel");
 
         if (result.isConfirmed) {
             setItems(items.filter((item) => item.id !== id));
@@ -172,9 +173,9 @@ export default function ItemList() {
 
     const handleSave = (data) => {
         if (modalMode === "add") {
-            setItems([...items, {...data, id: Date.now()}]);
+            setItems([...items, { ...data, id: Date.now() }]);
         } else if (modalMode === "edit") {
-            setItems(items.map(i => i.id === selectedItem.id ? {...i, ...data} : i));
+            setItems(items.map(i => i.id === selectedItem.id ? { ...i, ...data } : i));
         }
     };
 
@@ -196,7 +197,7 @@ export default function ItemList() {
                     onClick={openAdd}
                     className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
-                    <FiPlus className="text-lg"/>
+                    <FiPlus className="text-lg" />
                     Add Item
                 </button>
             </div>
@@ -219,95 +220,95 @@ export default function ItemList() {
                     {/* Header */}
                     <thead
                         className="bg-gradient-to-r from-slate-100 to-slate-200 text-slate-600 uppercase text-xs tracking-wider">
-                    <tr>
-                        {[
-                            "Item",
-                            "Pallet",
-                            "Handling Unit",
-                            "Package",
-                            "Pieces",
-                            "Description",
-                            "Weight",
-                            "Class",
-                            "NMFC",
-                            "Action",
-                        ].map((head) => (
-                            <th key={head} className="px-4 py-2 align-middle text-left font-semibold">
-                                {head}
-                            </th>
-                        ))}
-                    </tr>
+                        <tr>
+                            {[
+                                "Item",
+                                "Pallet",
+                                "Handling Unit",
+                                "Package",
+                                "Pieces",
+                                "Description",
+                                "Weight",
+                                "Class",
+                                "NMFC",
+                                "Action",
+                            ].map((head) => (
+                                <th key={head} className="px-4 py-2 align-middle text-left font-semibold">
+                                    {head}
+                                </th>
+                            ))}
+                        </tr>
                     </thead>
 
                     {/* Body */}
                     <tbody>
-                    {items.map((item, index) => (
-                        <tr
-                            key={item.id}
-                            className="group border-b last:border-none hover:bg-blue-50/40 transition-all duration-300"
-                        >
-                            <td className="px-4 py-2 align-middle">
-                                #{index + 1}
-                            </td>
+                        {items.map((item, index) => (
+                            <tr
+                                key={item.id}
+                                className="group border-b last:border-none hover:bg-blue-50/40 transition-all duration-300"
+                            >
+                                <td className="px-4 py-2 align-middle">
+                                    #{index + 1}
+                                </td>
 
-                            <td className="px-4 py-2 align-middle">{item.pallet}</td>
+                                <td className="px-4 py-2 align-middle">{item.pallet}</td>
 
-                            <td className="px-4 py-2 align-middle">
+                                <td className="px-4 py-2 align-middle">
                                     <span className="px-2 py-1 rounded-lg bg-slate-100 text-slate-600 text-xs">
                                         {item.handlingUnit}
                                     </span>
-                            </td>
+                                </td>
 
-                            <td className="px-4 py-2 align-middle">{item.packageType}</td>
+                                <td className="px-4 py-2 align-middle">{item.packageType}</td>
 
-                            <td className="px-4 py-2 align-middle font-semibold">
-                                {item.pieces}
-                            </td>
+                                <td className="px-4 py-2 align-middle font-semibold">
+                                    {item.pieces}
+                                </td>
 
-                            <td className="px-4 py-2 align-middle max-w-[250px] truncate">
-                                {item.description}
-                            </td>
+                                <td className="px-4 py-2 align-middle max-w-[250px] truncate">
+                                    {item.description}
+                                </td>
 
-                            <td className="px-4 py-2 align-middle">
-                                {item.weight}
-                            </td>
+                                <td className="px-4 py-2 align-middle">
+                                    {item.weight}
+                                </td>
 
-                            <td className="px-4 py-2 align-middle">
+                                <td className="px-4 py-2 align-middle">
                                     <span
                                         className="px-2 py-1 rounded-md bg-indigo-100 text-indigo-600 text-xs font-semibold">
                                         {item.classType}
                                     </span>
-                            </td>
+                                </td>
 
-                            <td className="px-4 py-2 align-middle">{item.nmfc}</td>
+                                <td className="px-4 py-2 align-middle">{item.nmfc}</td>
 
-                            {/* Actions */}
-                            <td className="px-4 py-2 align-middle">
-                                <div
-                                    className="flex gap-2 opacity-50 group-hover:opacity-100 transition-all duration-200">
+                                {/* Actions */}
+                                <td className="px-4 py-2 align-middle">
+                                    <div
+                                        className="flex gap-2 opacity-50 group-hover:opacity-100 transition-all duration-200">
 
-                                    <button
-                                        onClick={() => openView(item)}
-                                        className="p-2 rounded-lg hover:bg-green-200 text-green-800 hover:scale-110 transition-all">
-                                        <FiEye/>
-                                    </button>
+                                        <button
+                                            onClick={() => openView(item)}
+                                            className="p-2 rounded-lg hover:bg-green-200 text-green-800 hover:scale-110 transition-all">
+                                            <FiEye />
+                                        </button>
 
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        className="p-2 rounded-lg hover:bg-blue-100 text-blue-600 hover:scale-110 transition-all">
-                                        <FiEdit/>
-                                    </button>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            className="p-2 rounded-lg hover:bg-blue-100 text-blue-600 hover:scale-110 transition-all">
+                                            <FiEdit />
+                                        </button>
 
-                                    <button
-                                        onClick={() => handleRemove(item.id)}
-                                        className="p-2 rounded-lg hover:bg-red-100 text-red-500 hover:scale-110 transition-all"
-                                    >
-                                        <FiTrash2/>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
+                                        <button
+                                            onClick={() => handleRemove(item.id)}
+                                            className="p-2 rounded-lg hover:bg-red-100 text-red-500 hover:scale-110 transition-all"
+                                        >
+                                            <FiTrash2 />
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

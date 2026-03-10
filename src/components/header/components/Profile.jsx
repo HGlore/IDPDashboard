@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getProfileImage } from '../../../services/UserService'
+import * as imageAPI from '../../../api/imageAPI'
 import {
     MdKeyboardArrowDown, MdKeyboardArrowRight
 } from 'react-icons/md'
@@ -16,11 +16,16 @@ const Profile = ({ userData }) => {
     };
 
     useEffect(() => {
-        getProfileImage().then(res => {
-            if (res.success) {
-                setImage(res.imageUrl);
-            }
-        });
+        try {
+            imageAPI.getProfileImage().then(res => {
+                if (res.success) {
+                    setImage(res.imageUrl);
+                }
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
     }, []);
 
     return (<div className='flex items-center space-x-3 border-slate-200 mr-2'>

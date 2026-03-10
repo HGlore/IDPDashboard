@@ -4,16 +4,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SideNavBar from './components/sidebar/SideBar';
 import Dashboard from './pages/dashboard/dashboard';
 import LoginPage from './pages/LoginPage';
-import { CheckAuth } from './services/AuthService.js';
 import LoadingModal from './components/LoadingModal';
 import DatePicker from './components/header/components/DatePicker';
 import EntrySideNavBar from './components/sidebar/components/entry/EntrySideBar';
 import EntryPage from './pages/entry/EntryPage';
 import useIdleTimeout from "./hooks/useIdleTimeout.js";
-import { LogoutService } from "./services/LogoutService.js";
+import * as authAPI from "./api/authAPI.js";
 import { Duration } from "./utils/Duration.js";
 import { Toaster } from "./utils/Toast.js";
-import { API } from './utils/API.js';
+import { API_ENV } from './utils/API.js';
 
 const Routing = () => {
     const today = new Date().toISOString().split("T")[0];
@@ -35,11 +34,11 @@ const Routing = () => {
 
     useEffect(() => {
         const check = async () => {
-            if (!API.LOCAL_URL || !API.BASE_URL) {
+            if (!API_ENV.LOCAL_URL || !API_ENV.BASE_URL) {
                 setLoggedin(false);
                 setloading(false);
             } else {
-                const { loggedIn, user } = await CheckAuth();
+                const { loggedIn, user } = await authAPI.checkAuth();
 
                 setLoggedin(loggedIn);
 
@@ -58,7 +57,7 @@ const Routing = () => {
 
     const handleLogout = async () => {
         try {
-            await LogoutService();
+            await authAPI.Logout();
             window.location.reload();
         } catch (err) {
             /* console.error("Logout error:", err); */
@@ -79,7 +78,7 @@ const Routing = () => {
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
                         <Route path='/entry' element={<EntryPage />} />
                     </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
-                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData}/>} />
+                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
                     </Route>)}
             </Route>
         </Routes>

@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MdAddPhotoAlternate, MdAssignmentTurnedIn, MdOutlineImage } from "react-icons/md";
 import TopCard from "./components/TopCard";
-import { ImagesCountStatus } from "../../services/ImageService.js";
 import { DateFormatter } from "../../utils/DateFormatter.js";
 import LineStatistics from "./components/LineStatistics";
 import PieStatistics from "./components/PieStatistics";
 import HelloCard from "./components/HelloCard";
+import * as imageAPI from "../../api/imageAPI.js";
+import * as entriesAPI from "../../api/entriesAPI.js";
 
 const Dashboard = ({ date, userData }) => {
     const [imageCounts, setImageCounts] = useState({
@@ -19,7 +20,7 @@ const Dashboard = ({ date, userData }) => {
         const fetchCounts = async () => {
             try {
                 const formattedDate = DateFormatter(date);
-                const data = await ImagesCountStatus(formattedDate, userData);
+                const data = await entriesAPI.entriesStatus(formattedDate, userData);
                 setImageCounts(data);
             } catch (err) {
                 console.error("Error fetching image counts:", err);

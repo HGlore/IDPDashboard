@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { LoginService } from "../services/LoginSevice";
 import { toastShowError, toastShowSuccess } from "../utils/Toast.js";
-import { getProfileImage } from "../services/UserService.js";
 import { Database } from "lucide-react";
+import * as authAPI from "../api/authAPI.js";
+import * as imageAPI from "../api/imageAPI.js";
 
 const LoginPage = ({ setUserData, setLoggedIn }) => {
     const navigate = useNavigate();
@@ -21,9 +21,9 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
         setLoading(true);
 
         try {
-            const userData = await LoginService(companyID, password);
+            const userData = await authAPI.Login(companyID, password);
 
-            getProfileImage().then(async res => {
+            imageAPI.getProfileImage().then(async res => {
                 if (res.success) {
                     setUserData(userData);
                     setLoggedIn(true);
