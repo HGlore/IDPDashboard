@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttlWeight}) => {
+const EntryHeader = ({ instructions, totals }) => {
 
     return (
         <div className="flex items-end gap-5">
@@ -12,7 +12,7 @@ const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttl
                 </label>
                 <input
                     type="text"
-                    defaultValue={instruction}
+                    defaultValue={instructions?.line}
                     className="w-full border border-gray-300 rounded-md px-1.5 py-1 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500
                      focus:border-blue-500 transition"
@@ -26,7 +26,7 @@ const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttl
                 </label>
                 <input
                     type="number"
-                    defaultValue={ttlPalletCnt}
+                    defaultValue={totals?.totalPalletCnt}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -39,7 +39,7 @@ const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttl
                 </label>
                 <input
                     type="number"
-                    defaultValue={ttlHandlingUnit}
+                    defaultValue={totals?.totalHandlingUnit}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -52,7 +52,7 @@ const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttl
                 </label>
                 <input
                     type="number"
-                    defaultValue={ttlPieces}
+                    defaultValue={totals?.totalPieces}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -64,8 +64,8 @@ const EntryHeader = ({instruction, ttlPalletCnt, ttlHandlingUnit, ttlPieces, ttl
                     Total Weight
                 </label>
                 <input
-                    type="number"
-                    defaultValue={ttlWeight}
+                    type="text"
+                    defaultValue={totals?.totalWeight}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />

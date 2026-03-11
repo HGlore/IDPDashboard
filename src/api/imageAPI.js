@@ -32,19 +32,23 @@ export const getProfileImage = async () => {
     }
 };
 
-export const getEntryImage = async () => {
+export const getEntryImage = async (imagename) => {
     try {
-        const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/entry-image`, {
-            responseType: "blob",
-            withCredentials: true
-        });
+        const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/entry-image`,
+            {
+                params: {
+                    imageName: imagename
+                },
+                responseType: "blob",
+                withCredentials: true
+            });
 
         return {
             success: true,
             imageUrl: URL.createObjectURL(response.data),
         };
 
-    } catch (error) {
+    } catch (err) {
         if (axios.isAxiosError(err)) {
             return {
                 success: false,

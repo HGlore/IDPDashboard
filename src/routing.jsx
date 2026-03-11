@@ -79,6 +79,7 @@ const Routing = () => {
                         <Route path='/entry' element={<EntryPage />} />
                     </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
+                        <Route path='/entry' element={<EntryPage />} />
                     </Route>)}
             </Route>
         </Routes>

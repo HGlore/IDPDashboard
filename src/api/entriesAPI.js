@@ -1,17 +1,24 @@
 import axios from "axios";
 import { API_ENV } from "../utils/API";
 
-export const entriesData = async () => {
+export const entriesData = async ({ ids: ids, id: id }) => {
     try {
-        const response = await axios.get(
-            `${API_ENV.LOCAL_URL}/api/me/entries`,
-            {
-                withCredentials: true
-            }
-        );
+        let response;
 
-        console.log(response);
-        console.log(response.data);
+        if (id != null) {
+            response = await axios.get(
+                `${API_ENV.LOCAL_URL}/api/me/entries/${id}`,
+                { withCredentials: true }
+            );
+
+        } else {
+            response = await axios.post(
+                `${API_ENV.LOCAL_URL}/api/me/entries/batch`,
+                ids,
+                { withCredentials: true }
+            );
+        }
+
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || error.message);
@@ -29,6 +36,21 @@ export const entriesStatus = async (date) => {
                     "Content-Type": "application/json"
                 },
                 withCredentials: true,
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || error.message);
+    }
+};
+
+export const entriesIds = async () => {
+    try {
+        const response = await axios.get(
+            `${API_ENV.LOCAL_URL}/api/me/ids-entries`,
+            {
+                withCredentials: true
             }
         );
 

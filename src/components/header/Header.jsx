@@ -11,8 +11,8 @@ const Header = ({ userData, date, setDate }) => {
     useEffect(() => {
         const checkForRequest = async () => {
             try {
-                const freeForRequest = await requestAPI.ongoingEntries();
-                setCanRequest(!freeForRequest);
+                const isOngoing = await requestAPI.ongoingEntries();
+                setCanRequest(!isOngoing);
 
             } catch (error) {
                 throw new Error(error.freeForRequest?.data?.message || error.message);

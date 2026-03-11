@@ -1,35 +1,33 @@
 import React from 'react';
 import FieldCard from "./FieldCard.jsx";
 
-const DocumentFields = ({ titleName }) => {
+const DocumentFields = ({ document }) => {
     const fields = [
-        { name: "Date", value: "12/8/2023", placeholder: "Date..." },
-        { name: "StartTime", value: "2024-04-26 23:04:22", placeholder: "StartTime..." },
-        { name: "EndTime", value: "2024-04-26 23:04:46", placeholder: "EndTime..." },
-        { name: "Image", value: "20231214-BOL-ORG-116-103100-1214-103224886_1.tif", placeholder: "Image..." },
-        { name: "AccountType", value: "", placeholder: "AccountType..." },
-        { name: "DetectedAccountType", value: "LOW", placeholder: "DetectedAccountType..." },
-        { name: "BOLNumber", value: "254210467", placeholder: "BOLNumber..." },
-        { name: "MasterBOLNumber", value: "", placeholder: "MasterBOLNumber..." },
-        { name: "PONumber", value: "", placeholder: "PONumber..." },
-        { name: "QuoteNumber", value: "", placeholder: "QuoteNumber..." },
-        { name: "Terms", value: "3rd Party", placeholder: "Terms..." },
-        { name: "ShipperNumber", value: "", placeholder: "ShipperNumber..." },
-        { name: "Pronumber", value: "006-1234567-1", placeholder: "Pronumber..." },
-        { name: "RANumber", value: "", placeholder: "RANumber..." },
-        { name: "EControlNumber", value: "", placeholder: "EControlNumber..." },
-        { name: "DriverNumber", value: "514926", placeholder: "DriverNumber..." },
-        { name: "RunNumber", value: "0944", placeholder: "RunNumber..." },
-        { name: "CubicFeet", value: "", placeholder: "CubicFeet..." },
-        { name: "TimeDeparted", value: "", placeholder: "TimeDeparted..." },
-        { name: "TimeArrived", value: "", placeholder: "TimeArrived..." },
+        { name: "Date", value: `${document?.date}`, placeholder: "Date..." },
+        { name: "StartTime", value: `${document?.startTime}`, placeholder: "StartTime..." },
+        { name: "EndTime", value: `${document?.endTime}`, placeholder: "EndTime..." },
+        { name: "Image", value: `${document?.image}`, placeholder: "Image..." },
+        { name: "AccountType", value: `${document?.accountType}`, placeholder: "AccountType..." },
+        { name: "DetectedAccountType", value: `${document?.detectedAccType}`, placeholder: "DetectedAccountType..." },
+        { name: "BOLNumber", value: `${document?.bolNumber}`, placeholder: "BOLNumber..." },
+        { name: "MasterBOLNumber", value: `${document?.masterBolNumber}`, placeholder: "MasterBOLNumber..." },
+        { name: "PONumber", value: `${document?.poNumber}`, placeholder: "PONumber..." },
+        { name: "QuoteNumber", value: `${document?.quoteNumber}`, placeholder: "QuoteNumber..." },
+        { name: "Terms", value: `${document?.terms}`, placeholder: "Terms..." },
+        { name: "ShipperNumber", value: `${document?.shipperNumber}`, placeholder: "ShipperNumber..." },
+        { name: "Pronumber", value: `${document?.proNumber}`, placeholder: "Pronumber..." },
+        { name: "RANumber", value: `${document?.raNumber}`, placeholder: "RANumber..." },
+        { name: "EControlNumber", value: `${document?.eControlNumber}`, placeholder: "EControlNumber..." },
+        { name: "DriverNumber", value: `${document?.driverNumber}`, placeholder: "DriverNumber..." },
+        { name: "RunNumber", value: `${document?.runNumber}`, placeholder: "RunNumber..." },
+        { name: "CubicFeet", value: `${document?.cubicFeet}`, placeholder: "CubicFeet..." },
+        { name: "TimeDeparted", value: `${document?.timeDeparted}`, placeholder: "TimeDeparted..." },
+        { name: "TimeArrived", value: `${document?.timeArrived}`, placeholder: "TimeArrived..." },
     ];
 
     return (
         <div className="p-4 border rounded-md shadow-sm bg-white">
-            {titleName && (
-                <h2 className="fl text-lg font-bold text-gray-800 mb-2 justify-center">{titleName}</h2>
-            )}
+            <h2 className="flex text-lg font-bold text-gray-800 mb-2 justify-center">Documents</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {fields.map((field, idx) => (

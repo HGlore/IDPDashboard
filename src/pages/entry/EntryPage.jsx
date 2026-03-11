@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DocumentFields from "./components/DocumentFields";
 import PartyFields from "./components/PartyFields.jsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -6,18 +6,58 @@ import { motion, AnimatePresence } from "framer-motion";
 import EntryHeader from "./components/EntryHeader.jsx";
 import ItemList from "./components/ItemList.jsx";
 import ImageViewer from "./components/ImageViewer.jsx";
+import * as entriesAPI from './../../api/entriesAPI.js';
+import * as imageAPI from './../../api/imageAPI.js';
+import LoadingPage from "../../utils/LoadingPage.jsx";
 
 const EntryPage = () => {
     const [currentStep, setCurrentStep] = useState(0);
     const [direction, setDirection] = useState(0);
     const [showItemList, setShowItemList] = useState(false);
+    const [entry, setEntry] = useState(null);
 
     const pages = [
-        { id: 0, component: <DocumentFields titleName="Documents" /> },
+        { id: 0, component: entry && <DocumentFields document={entry} /> },
         { id: 1, component: <PartyFields titleName="Shipper" /> },
         { id: 2, component: <PartyFields titleName="Consignee" /> },
         { id: 3, component: <PartyFields titleName="Bill-To" /> },
     ];
+
+    useEffect(() => {
+        const fetchIDs = async () => {
+            try {
+                const responseIDs = await entriesAPI.entriesIds();
+                localStorage.setItem("IDs", JSON.stringify(responseIDs));
+
+                const responseEntry = await entriesAPI.entriesData({ ids: responseIDs });
+                setEntry(responseEntry[0]);
+
+            } catch (error) {
+                console.error("Error fetching IDs:", error);
+            }
+        };
+
+        fetchIDs();
+    }, []);
+
+    useEffect(() => {
+        const fetchImage = async () => {
+            if (!entry?.imageName) return;
+
+            try {
+                const responseImage = await imageAPI.getEntryImage(entry?.imageName);
+                console.log("ImageURL: " + responseImage);
+
+            } catch (error) {
+                console.error("Error fetching image: ", error);
+            }
+        };
+
+        fetchImage();
+        pages
+        console.log(entry);
+
+    }, [entry]);
 
     const handleNext = () => {
         if (currentStep < pages.length - 1) {
@@ -53,15 +93,16 @@ const EntryPage = () => {
         exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
     };
 
+    if (!entry) {
+        return <LoadingPage />
+    }
+
     return (
         <div className="p-5 min-h-screen bg-gray-50 flex flex-col gap-4">
             {/* Header */}
             <EntryHeader
-                instruction="Deliver on time."
-                ttlPalletCnt={1}
-                ttlHandlingUnit={1}
-                ttlPieces={1}
-                ttlWeight={110.2}
+                instructions={entry?.instructions}
+                totals={entry?.totals}
             />
 
             {/* Main Content */}
