@@ -52,9 +52,9 @@ const Profile = ({ userData }) => {
 
             <div
                 className={`
-                    overflow-hidden transition-all duration-300 ease-in-out
-                    ${isOpenLog ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-                    `}
+                            overflow-hidden transition-all duration-300 ease-in-out
+                            ${isOpenLog ? "max-h-96 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}
+                          `}
             >
                 <DrawerLog />
             </div>

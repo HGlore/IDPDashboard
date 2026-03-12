@@ -39,7 +39,6 @@ export const Logout = async () => {
     try {
         const response = await axios.post(
             `${API_ENV.LOCAL_URL}/api/user-out`,
-            {},                     // empty body
             { withCredentials: true }
         );
         return response.data; // "Logged out successfully"

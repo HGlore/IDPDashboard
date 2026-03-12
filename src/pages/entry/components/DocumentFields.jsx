@@ -2,6 +2,7 @@ import React from 'react';
 import FieldCard from "./FieldCard.jsx";
 
 const DocumentFields = ({ document }) => {
+
     const fields = [
         { name: "Date", value: `${document?.date}`, placeholder: "Date..." },
         { name: "StartTime", value: `${document?.startTime}`, placeholder: "StartTime..." },
@@ -32,11 +33,10 @@ const DocumentFields = ({ document }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {fields.map((field, idx) => (
                     <FieldCard
-                        key={idx}
+                        key={document?.id + idx}
                         name={field.name}
                         value={field.value}
                         placeholder={field.placeholder}
-                        fieldWidth="full"
                     />
                 ))}
             </div>

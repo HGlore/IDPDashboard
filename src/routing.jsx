@@ -60,8 +60,7 @@ const Routing = () => {
             await authAPI.Logout();
             window.location.reload();
         } catch (err) {
-            /* console.error("Logout error:", err); */
-            alert("Logout failed!");
+            window.location.reload();
         }
     }
 
@@ -79,7 +78,7 @@ const Routing = () => {
                         <Route path='/entry' element={<EntryPage />} />
                     </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
-                        <Route path='/entry' element={<EntryPage />} />
+                        <Route path='/entry' />
                     </Route>)}
             </Route>
         </Routes>

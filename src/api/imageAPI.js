@@ -32,13 +32,11 @@ export const getProfileImage = async () => {
     }
 };
 
-export const getEntryImage = async (imagename) => {
+export const getEntryImage = async (imageName) => {
     try {
         const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/entry-image`,
             {
-                params: {
-                    imageName: imagename
-                },
+                params: { imageName },
                 responseType: "blob",
                 withCredentials: true
             });

@@ -1,148 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiEdit, FiTrash2, FiPlus, FiEye } from "react-icons/fi";
 import { sweetShowMessage } from "../../../utils/ShowAlert.js";
 import ItemModal from "./ItemModal.jsx";
 
-const initialItems = [
-    {
-        id: 1,
-        pallet: "13",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 2,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 3,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 4,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 5,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 6,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 7,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 8,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 9,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 10,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-    {
-        id: 11,
-        pallet: "1",
-        handlingUnit: "Pallet",
-        packageType: "Boxes",
-        pieces: "1",
-        description: "Acrylic Bathtub - 5179233",
-        weight: "110.2",
-        classType: "70",
-        nmfc: "158260.02",
-        dimension: "",
-    },
-];
-
-export default function ItemList() {
-    const [items, setItems] = useState(initialItems);
+export default function ItemList({ itemList = [], imageURL }) {
+    const [items, setItems] = useState(itemList);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
+
+    useEffect(() => {
+        if (itemList.length) setItems(itemList);
+    }, [itemList]);
 
     const handleRemove = async (id) => {
         const result = await sweetShowMessage("warning", "Remove Item:",
@@ -325,6 +194,7 @@ export default function ItemList() {
                 onSave={handleSave}
                 mode={modalMode}
                 itemData={selectedItem}
+                imageURL={imageURL}
             />
         </div>
     );

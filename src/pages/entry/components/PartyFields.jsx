@@ -1,15 +1,15 @@
 import FieldCard from "./FieldCard.jsx";
 
-const PartyFields = ({ titleName }) => {
+const PartyFields = ({ titleName, fieldsData }) => {
     const fields = {
-        Name: "HUMBLE/ATLANTIC COAST IMPORT DISTRIBUTORS",
-        ContactName: "JACK SKORSKI",
-        Phone: "732-364-3254",
-        AddressLine1: "1234 SWARTHMORE AVE,",
-        AddressLine2: "",
-        City: "LAKEWOOD",
-        State: "NJ",
-        ZipCode: "08701",
+        Name: fieldsData?.name,
+        ContactName: fieldsData?.contactName,
+        Phone: fieldsData?.phone,
+        AddressLine1: fieldsData?.addressLine1,
+        AddressLine2: fieldsData?.addressLine2,
+        City: fieldsData?.city,
+        State: fieldsData?.state,
+        ZipCode: fieldsData?.zipCode,
     };
 
     return (

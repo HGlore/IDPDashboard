@@ -1,47 +1,92 @@
-import React from "react";
+import React, { useState } from "react";
 
-const ImageViewer = ({ src, alt, onPrev, onNext }) => {
+const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
+    const [zoom, setZoom] = useState(1);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [dragging, setDragging] = useState(false);
+    const [start, setStart] = useState({ x: 0, y: 0 });
+
+    const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 5));
+    const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 0.5));
+
+    const handleMouseDown = (e) => {
+        setDragging(true);
+        setStart({
+            x: e.clientX - position.x,
+            y: e.clientY - position.y
+        });
+    };
+
+    const handleMouseMove = (e) => {
+        if (!dragging) return;
+
+        setPosition({
+            x: e.clientX - start.x,
+            y: e.clientY - start.y
+        });
+    };
+
+    const handleMouseUp = () => {
+        setDragging(false);
+    };
+
     return (
-        <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-2xl overflow-hidden relative shadow-inner">
+        <div
+            className="w-full h-full flex items-center justify-center bg-gray-50 rounded-2xl overflow-hidden relative shadow-inner"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+        >
             {src ? (
                 <>
                     <img
                         src={src}
                         alt={alt || "Preview"}
-                        className="max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-105"
+                        onMouseDown={handleMouseDown}
+                        style={{
+                            transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+                            cursor: dragging ? "grabbing" : "grab"
+                        }}
+                        className="max-w-full max-h-full object-contain select-none transition-transform duration-100"
+                        draggable={false}
                     />
-                    {/* Previous Button */}
+
+                    {/* Zoom In */}
+                    <button
+                        onClick={zoomIn}
+                        className="absolute top-2 right-12 bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800"
+                    >
+                        +
+                    </button>
+
+                    {/* Zoom Out */}
+                    <button
+                        onClick={zoomOut}
+                        className="absolute top-2 right-2 bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800"
+                    >
+                        −
+                    </button>
+
+                    {/* Previous */}
                     <button
                         onClick={onPrev}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 focus:outline-none"
+                        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 
+                            ${index === 0 ? "invisible" : ""}`}
                     >
                         &#8592;
                     </button>
 
-                    {/* Next Button */}
+                    {/* Next */}
                     <button
                         onClick={onNext}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 focus:outline-none"
+                        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 
+                                ${index === (itemLength - 1) ? "invisible" : ""}`}
                     >
                         &#8594;
                     </button>
                 </>
             ) : (
                 <div className="flex flex-col items-center justify-center text-gray-400">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-12 w-12 mb-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 7v10a4 4 0 004 4h10a4 4 0 004-4V7a4 4 0 00-4-4H7a4 4 0 00-4 4z"
-                        />
-                    </svg>
                     <span>Image Viewer</span>
                 </div>
             )}

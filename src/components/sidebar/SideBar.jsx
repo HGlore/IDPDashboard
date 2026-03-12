@@ -52,6 +52,7 @@ const SideNavBar = ({ userData, date, setDate }) => {
                             <span className="hidden md:inline">Monitoring</span>
                         </NavLink>
                     </div>
+
                     {/* Data Analytics */}
                     <div className='rounded-xl p-0.5'>
                         <NavLink to="/analytics"

@@ -8,23 +8,19 @@ import ItemList from "./components/ItemList.jsx";
 import ImageViewer from "./components/ImageViewer.jsx";
 import * as entriesAPI from './../../api/entriesAPI.js';
 import * as imageAPI from './../../api/imageAPI.js';
-import LoadingPage from "../../utils/LoadingPage.jsx";
+import LoadingModal from "../../components/LoadingModal.jsx";
 
 const EntryPage = () => {
     const [currentStep, setCurrentStep] = useState(0);
+    const [imageIndex, setImageIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [showItemList, setShowItemList] = useState(false);
     const [entry, setEntry] = useState(null);
-
-    const pages = [
-        { id: 0, component: entry && <DocumentFields document={entry} /> },
-        { id: 1, component: <PartyFields titleName="Shipper" /> },
-        { id: 2, component: <PartyFields titleName="Consignee" /> },
-        { id: 3, component: <PartyFields titleName="Bill-To" /> },
-    ];
+    const [entryID, setEntryID] = useState(0);
+    const [imageURL, setImageURL] = useState(null);
 
     useEffect(() => {
-        const fetchIDs = async () => {
+        const fetchBatchIDs = async () => {
             try {
                 const responseIDs = await entriesAPI.entriesIds();
                 localStorage.setItem("IDs", JSON.stringify(responseIDs));
@@ -32,12 +28,15 @@ const EntryPage = () => {
                 const responseEntry = await entriesAPI.entriesData({ ids: responseIDs });
                 setEntry(responseEntry[0]);
 
+                const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
+                setImageIndex(index);
+
             } catch (error) {
                 console.error("Error fetching IDs:", error);
             }
         };
 
-        fetchIDs();
+        fetchBatchIDs();
     }, []);
 
     useEffect(() => {
@@ -45,8 +44,11 @@ const EntryPage = () => {
             if (!entry?.imageName) return;
 
             try {
-                const responseImage = await imageAPI.getEntryImage(entry?.imageName);
-                console.log("ImageURL: " + responseImage);
+                const responseImage = await imageAPI.getEntryImage(entry.imageName);
+
+                if (responseImage.success) {
+                    setImageURL(responseImage.imageUrl);
+                }
 
             } catch (error) {
                 console.error("Error fetching image: ", error);
@@ -54,10 +56,49 @@ const EntryPage = () => {
         };
 
         fetchImage();
-        pages
-        console.log(entry);
 
     }, [entry]);
+
+    useEffect(() => {
+        const fetchEntryByID = async () => {
+            if (!entryID || entryID === entry?.id) return;
+            const response = await entriesAPI.entriesData({ id: entryID });
+            setEntry(response);
+
+            console.log("Entry New ID: ", entryID);
+            console.log("New Data:", response);
+        };
+        fetchEntryByID();
+
+    }, [entryID]);
+
+    const setIndexToNext = () => {
+        const ids = JSON.parse(localStorage.getItem("IDs"));
+        if (imageIndex >= ids.length - 1) return;
+
+        const newIndex = imageIndex + 1;
+        const newID = ids[newIndex];
+
+        setImageIndex(newIndex);
+        setEntryID(newID);
+
+        console.log("New ID(next):", ids[imageIndex]);
+        console.log(imageIndex);
+    };
+
+    const setIndexToPrev = () => {
+        const ids = JSON.parse(localStorage.getItem("IDs"));
+        if (imageIndex <= 0) return;
+
+        const prevIndex = imageIndex - 1;
+        const prevID = ids[prevIndex];
+
+        setImageIndex(prevIndex);
+        setEntryID(prevID);
+
+        console.log("New ID(prev):", entryID);
+        console.log(imageIndex);
+    };
 
     const handleNext = () => {
         if (currentStep < pages.length - 1) {
@@ -94,8 +135,15 @@ const EntryPage = () => {
     };
 
     if (!entry) {
-        return <LoadingPage />
+        return <LoadingModal />
     }
+
+    const pages = [
+        { id: 0, component: entry && <DocumentFields document={entry} /> },
+        { id: 1, component: entry && <PartyFields titleName="Shipper" fieldsData={entry?.shipper} /> },
+        { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} /> },
+        { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} /> },
+    ];
 
     return (
         <div className="p-5 min-h-screen bg-gray-50 flex flex-col gap-4">
@@ -103,6 +151,8 @@ const EntryPage = () => {
             <EntryHeader
                 instructions={entry?.instructions}
                 totals={entry?.totals}
+                index={imageIndex}
+                itemLength={JSON.parse(localStorage.getItem("IDs")).length}
             />
 
             {/* Main Content */}
@@ -120,7 +170,7 @@ const EntryPage = () => {
                             className="absolute inset-0 flex flex-col bg-white/70 rounded-2xl shadow-lg overflow-hidden"
                         >
                             <div className="flex-1 overflow-y-auto p-4">
-                                <ItemList />
+                                <ItemList itemList={entry?.items} imageURL={imageURL} />
                             </div>
 
                             {/* Bottom Button */}
@@ -146,7 +196,8 @@ const EntryPage = () => {
                         >
                             {/* Left Panel */}
                             <div className="w-1/2 rounded-2xl border border-gray-200 shadow-inner">
-                                <ImageViewer />
+                                <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs")).length}
+                                    onPrev={setIndexToPrev} onNext={setIndexToNext} />
                             </div>
 
                             {/* Right Panel */}
