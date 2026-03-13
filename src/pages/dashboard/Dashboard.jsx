@@ -8,13 +8,31 @@ import PieStatistics from "./components/PieStatistics";
 import HelloCard from "./components/HelloCard";
 import * as imageAPI from "../../api/imageAPI.js";
 import * as entriesAPI from "../../api/entriesAPI.js";
+import { sweetShowMessage } from "../../utils/ShowAlert.js";
 
-const Dashboard = ({ date, userData }) => {
+const Dashboard = ({ date, userData, canRequest, ongoingDate }) => {
     const [imageCounts, setImageCounts] = useState({
         totalQueue: 0,
         newImages: 0,
         billedImages: 0,
     });
+
+    useEffect(() => {
+        if (!ongoingDate) return;
+        const currentDate = localStorage.getItem("date");
+        const formattedDate = DateFormatter(currentDate);
+
+        if (!canRequest && userData.role !== "Administrator" && ongoingDate !== formattedDate) {
+            sweetShowMessage(
+                "warning",
+                "!Unfinished Entries!",
+                `You have unfinished entries! Date: ${ongoingDate}`,
+                "Ok",
+                "Cancel"
+            );
+        }
+
+    }, [date]);
 
     useEffect(() => {
         const fetchCounts = async () => {

@@ -14,7 +14,6 @@ const RequestForEntry = ({ setCanRequest: canRequest }) => {
                 window.location.reload();
 
             } catch (error) {
-                console.log("Error Baiii!!!!");
                 throw new Error(error.requestAPI?.data?.message || error.message);
             }
         }

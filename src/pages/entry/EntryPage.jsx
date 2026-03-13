@@ -9,8 +9,9 @@ import ImageViewer from "./components/ImageViewer.jsx";
 import * as entriesAPI from './../../api/entriesAPI.js';
 import * as imageAPI from './../../api/imageAPI.js';
 import LoadingModal from "../../components/LoadingModal.jsx";
+import { sweetShowMessage } from "../../utils/ShowAlert.js";
 
-const EntryPage = () => {
+const EntryPage = ({ canRequest, date, ongoingDate }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [imageIndex, setImageIndex] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -20,13 +21,18 @@ const EntryPage = () => {
     const [imageURL, setImageURL] = useState(null);
 
     useEffect(() => {
+        console.log("Date 1 change: ", date);
+
         const fetchBatchIDs = async () => {
             try {
                 const responseIDs = await entriesAPI.entriesIds();
                 localStorage.setItem("IDs", JSON.stringify(responseIDs));
 
-                const responseEntry = await entriesAPI.entriesData({ ids: responseIDs });
+                console.log("IDS: ", responseIDs);
+
+                const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date: date });
                 setEntry(responseEntry[0]);
+                console.log("Response Entry Data(Batch): ", responseEntry[0]);
 
                 const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
                 setImageIndex(index);
@@ -37,9 +43,11 @@ const EntryPage = () => {
         };
 
         fetchBatchIDs();
-    }, []);
+    }, [date]);
 
     useEffect(() => {
+        console.log("Date 2 change: ", date);
+
         const fetchImage = async () => {
             if (!entry?.imageName) return;
 
@@ -54,23 +62,42 @@ const EntryPage = () => {
                 console.error("Error fetching image: ", error);
             }
         };
-
         fetchImage();
 
-    }, [entry]);
+    }, [entry, date]);
 
     useEffect(() => {
+        console.log("Date 3 change: ", date);
+
         const fetchEntryByID = async () => {
             if (!entryID || entryID === entry?.id) return;
             const response = await entriesAPI.entriesData({ id: entryID });
             setEntry(response);
+            console.log("Response Entry Data(Single): ", response);
 
-            console.log("Entry New ID: ", entryID);
-            console.log("New Data:", response);
         };
         fetchEntryByID();
 
-    }, [entryID]);
+    }, [entryID, date]);
+
+    useEffect(() => {
+        console.log("Date 4 change: ", date);
+
+        const currentDate = localStorage.getItem("date");
+        console.log("Formatted Date: ", currentDate);
+        console.log("Ongoing Date: ", ongoingDate);
+
+        if (!canRequest && ongoingDate !== currentDate) {
+            sweetShowMessage(
+                "warning",
+                "!Unfinished Entries!",
+                `You have unfinished entries! Date: ${ongoingDate}`,
+                "Ok",
+                "Cancel"
+            );
+        }
+
+    }, [canRequest, date]);
 
     const setIndexToNext = () => {
         const ids = JSON.parse(localStorage.getItem("IDs"));
@@ -81,9 +108,6 @@ const EntryPage = () => {
 
         setImageIndex(newIndex);
         setEntryID(newID);
-
-        console.log("New ID(next):", ids[imageIndex]);
-        console.log(imageIndex);
     };
 
     const setIndexToPrev = () => {
@@ -95,9 +119,6 @@ const EntryPage = () => {
 
         setImageIndex(prevIndex);
         setEntryID(prevID);
-
-        console.log("New ID(prev):", entryID);
-        console.log(imageIndex);
     };
 
     const handleNext = () => {
@@ -134,8 +155,8 @@ const EntryPage = () => {
         exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
     };
 
-    if (!entry) {
-        return <LoadingModal />
+    if (canRequest && !entry) {
+        return <LoadingModal />;
     }
 
     const pages = [

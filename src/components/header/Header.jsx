@@ -3,24 +3,8 @@ import Search from './components/Search'
 import Profile from './components/Profile'
 import DatePicker from './components/DatePicker'
 import RequestForEntry from './components/RequestForEntry'
-import * as requestAPI from './../../api/requestAPI'
 
-const Header = ({ userData, date, setDate }) => {
-    const [canRequest, setCanRequest] = useState(false);
-
-    useEffect(() => {
-        const checkForRequest = async () => {
-            try {
-                const isOngoing = await requestAPI.ongoingEntries();
-                setCanRequest(!isOngoing);
-
-            } catch (error) {
-                throw new Error(error.freeForRequest?.data?.message || error.message);
-            }
-        };
-
-        checkForRequest();
-    }, [canRequest]);
+const Header = ({ userData, date, setDate, canRequest }) => {
 
     return (
         <div className='flex bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.4)] rounded-sm items-center justify-center'>

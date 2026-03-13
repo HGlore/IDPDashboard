@@ -13,10 +13,13 @@ import * as authAPI from "./api/authAPI.js";
 import { Duration } from "./utils/Duration.js";
 import { Toaster } from "./utils/Toast.js";
 import { API_ENV } from './utils/API.js';
+import * as requestAPI from './api/requestAPI.js'
 
 const Routing = () => {
     const today = new Date().toISOString().split("T")[0];
     const [date, setDate] = useState(today);
+    const [ongoingDate, setOngoingDate] = useState(null);
+    const [canRequest, setCanRequest] = useState(false);
 
     const [loggedIn, setLoggedin] = useState(false);
     const [loading, setloading] = useState(true);
@@ -55,6 +58,24 @@ const Routing = () => {
         check();
     }, []);
 
+    useEffect(() => {
+        if (!loggedIn) return;
+
+        checkForRequest();
+    }, [loggedIn, date]);
+
+    const checkForRequest = async () => {
+        try {
+            const response = await requestAPI.ongoingEntries();
+            console.log("Ongoing Response: ", response);
+
+            setCanRequest(!response?.ongoing);
+            setOngoingDate(response?.storedDate);
+        } catch (error) {
+            console.error("Check request failed:", error.response?.data?.message || error.message);
+        }
+    };
+
     const handleLogout = async () => {
         try {
             await authAPI.Logout();
@@ -73,11 +94,11 @@ const Routing = () => {
                 <LoginPage setUserData={setUserData} setLoggedIn={setLoggedin} />)} />
             <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
                 {userData?.role === "Entry" ? (
-                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} />}>
-                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
-                        <Route path='/entry' element={<EntryPage />} />
+                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} />}>
+                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} ongoingDate={ongoingDate} />} />
+                        <Route path='/entry' element={<EntryPage canRequest={canRequest} date={date} ongoingDate={ongoingDate} />} />
                     </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
-                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData} />} />
+                        <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} />} />
                         <Route path='/entry' />
                     </Route>)}
             </Route>

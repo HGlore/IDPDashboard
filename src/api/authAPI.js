@@ -10,9 +10,10 @@ export const checkAuth = async () => {
             }
         );
 
+        if (res.data.status === "401") return { loggedIn: false };
+
         return { loggedIn: true, user: res.data };
     } catch (err) {
-        /* console.error("error:", err.response?.status); */
         return { loggedIn: false };
     }
 };

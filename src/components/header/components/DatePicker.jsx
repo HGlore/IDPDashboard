@@ -1,7 +1,14 @@
 import { useRef } from "react";
+import { DateFormatter } from "../../../utils/DateFormatter";
 
 const DatePicker = ({ date, setDate }) => {
     const inputRef = useRef(null);
+
+    const setDateHandle = (dateValue) => {
+        setDate(DateFormatter(date));
+        const formattedDate = DateFormatter(dateValue);
+        localStorage.setItem("date", formattedDate);
+    };
 
     return (
         <div>
@@ -9,7 +16,7 @@ const DatePicker = ({ date, setDate }) => {
                 ref={inputRef}
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e) => setDateHandle(e.target.value)}
                 // onKeyDown={(e) => e.preventDefault()}
                 // onPaste={(e) => e.preventDefault()}
                 onClick={() => inputRef.current?.showPicker()}

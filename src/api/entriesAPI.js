@@ -1,23 +1,27 @@
 import axios from "axios";
 import { API_ENV } from "../utils/API";
 
-export const entriesData = async ({ ids: ids, id: id }) => {
+export const entriesData = async ({ ids: ids, id: id, date: date }) => {
     try {
         let response;
 
         if (id != null) {
             response = await axios.get(
-                `${API_ENV.LOCAL_URL}/api/me/entries/${id}`,
+                `${API_ENV.LOCAL_URL}/api/me/entries/${id}/${date}`,
                 { withCredentials: true }
             );
 
         } else {
             response = await axios.post(
                 `${API_ENV.LOCAL_URL}/api/me/entries/batch`,
-                ids,
+                {
+                    ids: ids,
+                    date: date
+                },
                 { withCredentials: true }
             );
         }
+        console.log(response.data);
 
         return response.data;
     } catch (error) {
