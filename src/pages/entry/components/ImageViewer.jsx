@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
     const [zoom, setZoom] = useState(1);
@@ -29,6 +29,13 @@ const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
     const handleMouseUp = () => {
         setDragging(false);
     };
+
+    useEffect(() => {
+        if (!src) {
+
+        }
+
+    }, [src]);
 
     return (
         <div

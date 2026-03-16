@@ -5,9 +5,8 @@ const DatePicker = ({ date, setDate }) => {
     const inputRef = useRef(null);
 
     const setDateHandle = (dateValue) => {
-        setDate(DateFormatter(date));
-        const formattedDate = DateFormatter(dateValue);
-        localStorage.setItem("date", formattedDate);
+        setDate(dateValue);
+        localStorage.setItem("date", dateValue);
     };
 
     return (

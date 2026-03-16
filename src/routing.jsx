@@ -27,6 +27,9 @@ const Routing = () => {
     const [entryData, setEntryData] = useState(null);
     const [dashboardData, setDashboardData] = useState(null);
 
+    localStorage.setItem("date", date);
+
+
     {/* useEffect(() => {
        CheckAuth().then(({ loggedIn }) => {
        setLoggedin(loggedIn);
@@ -67,10 +70,10 @@ const Routing = () => {
     const checkForRequest = async () => {
         try {
             const response = await requestAPI.ongoingEntries();
-            console.log("Ongoing Response: ", response);
 
             setCanRequest(!response?.ongoing);
             setOngoingDate(response?.storedDate);
+
         } catch (error) {
             console.error("Check request failed:", error.response?.data?.message || error.message);
         }

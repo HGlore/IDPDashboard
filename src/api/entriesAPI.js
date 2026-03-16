@@ -1,14 +1,22 @@
 import axios from "axios";
 import { API_ENV } from "../utils/API";
+import { DateFormatter } from "../utils/DateFormatter";
 
 export const entriesData = async ({ ids: ids, id: id, date: date }) => {
+    const formattedDate = DateFormatter(date);
+
     try {
         let response;
 
         if (id != null) {
             response = await axios.get(
-                `${API_ENV.LOCAL_URL}/api/me/entries/${id}/${date}`,
-                { withCredentials: true }
+                `${API_ENV.LOCAL_URL}/api/me/entries/${id}`,
+                {
+                    params: {
+                        date: formattedDate
+                    },
+                    withCredentials: true
+                }
             );
 
         } else {
@@ -16,12 +24,11 @@ export const entriesData = async ({ ids: ids, id: id, date: date }) => {
                 `${API_ENV.LOCAL_URL}/api/me/entries/batch`,
                 {
                     ids: ids,
-                    date: date
+                    date: formattedDate
                 },
                 { withCredentials: true }
             );
         }
-        console.log(response.data);
 
         return response.data;
     } catch (error) {

@@ -10,8 +10,12 @@ import * as entriesAPI from './../../api/entriesAPI.js';
 import * as imageAPI from './../../api/imageAPI.js';
 import LoadingModal from "../../components/LoadingModal.jsx";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
+import { DateFormatter } from "../../utils/DateFormatter.js";
+import { useNavigate } from "react-router-dom";
 
 const EntryPage = ({ canRequest, date, ongoingDate }) => {
+    const navigate = useNavigate();
+
     const [currentStep, setCurrentStep] = useState(0);
     const [imageIndex, setImageIndex] = useState(0);
     const [direction, setDirection] = useState(0);
@@ -20,84 +24,70 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
     const [entryID, setEntryID] = useState(0);
     const [imageURL, setImageURL] = useState(null);
 
-    useEffect(() => {
-        console.log("Date 1 change: ", date);
-
-        const fetchBatchIDs = async () => {
-            try {
-                const responseIDs = await entriesAPI.entriesIds();
-                localStorage.setItem("IDs", JSON.stringify(responseIDs));
-
-                console.log("IDS: ", responseIDs);
-
-                const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date: date });
-                setEntry(responseEntry[0]);
-                console.log("Response Entry Data(Batch): ", responseEntry[0]);
-
-                const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
-                setImageIndex(index);
-
-            } catch (error) {
-                console.error("Error fetching IDs:", error);
-            }
-        };
-
+    /* useEffect(() => {
         fetchBatchIDs();
-    }, [date]);
+    }, []); */
 
     useEffect(() => {
-        console.log("Date 2 change: ", date);
-
-        const fetchImage = async () => {
-            if (!entry?.imageName) return;
-
-            try {
-                const responseImage = await imageAPI.getEntryImage(entry.imageName);
-
-                if (responseImage.success) {
-                    setImageURL(responseImage.imageUrl);
-                }
-
-            } catch (error) {
-                console.error("Error fetching image: ", error);
-            }
-        };
         fetchImage();
 
-    }, [entry, date]);
+    }, [entry]);
 
     useEffect(() => {
-        console.log("Date 3 change: ", date);
-
-        const fetchEntryByID = async () => {
-            if (!entryID || entryID === entry?.id) return;
-            const response = await entriesAPI.entriesData({ id: entryID });
-            setEntry(response);
-            console.log("Response Entry Data(Single): ", response);
-
-        };
         fetchEntryByID();
 
-    }, [entryID, date]);
+    }, [entryID]);
 
     useEffect(() => {
-        console.log("Date 4 change: ", date);
+        fetchImage();
+        fetchBatchIDs();
 
         const currentDate = localStorage.getItem("date");
-        console.log("Formatted Date: ", currentDate);
-        console.log("Ongoing Date: ", ongoingDate);
+        const formattedDate = DateFormatter(currentDate);
 
-        if (!canRequest && ongoingDate !== currentDate) {
-            sweetShowMessage(
-                "warning",
-                "!Unfinished Entries!",
-                `You have unfinished entries! Date: ${ongoingDate}`,
-                "Ok",
-                "Cancel"
-            );
+        if (!canRequest && ongoingDate !== formattedDate) {
+            navigate("/dashboard");
         }
 
-    }, [canRequest, date]);
+    }, [date]);
+
+    const fetchBatchIDs = async () => {
+        try {
+            const responseIDs = await entriesAPI.entriesIds();
+            localStorage.setItem("IDs", JSON.stringify(responseIDs));
+
+            const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date: date });
+            setEntry(responseEntry[0]);
+
+            const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
+            setImageIndex(index);
+
+        } catch (error) {
+            console.error("Error fetching IDs:", error);
+        }
+    };
+
+    const fetchImage = async () => {
+        if (!entry?.imageName) return;
+
+        try {
+            const responseImage = await imageAPI.getEntryImage(entry.imageName);
+
+            if (responseImage.success) {
+                setImageURL(responseImage.imageUrl);
+            }
+
+        } catch (error) {
+            console.error("Error fetching image: ", error);
+        }
+    };
+
+    const fetchEntryByID = async () => {
+        if (!entryID || entryID === entry?.id) return;
+        const response = await entriesAPI.entriesData({ id: entryID, date });
+        setEntry(response);
+
+    };
 
     const setIndexToNext = () => {
         const ids = JSON.parse(localStorage.getItem("IDs"));
@@ -155,7 +145,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
         exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
     };
 
-    if (canRequest && !entry) {
+    if (!canRequest && !entry) {
         return <LoadingModal />;
     }
 

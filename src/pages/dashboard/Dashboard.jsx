@@ -18,23 +18,6 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate }) => {
     });
 
     useEffect(() => {
-        if (!ongoingDate) return;
-        const currentDate = localStorage.getItem("date");
-        const formattedDate = DateFormatter(currentDate);
-
-        if (!canRequest && userData.role !== "Administrator" && ongoingDate !== formattedDate) {
-            sweetShowMessage(
-                "warning",
-                "!Unfinished Entries!",
-                `You have unfinished entries! Date: ${ongoingDate}`,
-                "Ok",
-                "Cancel"
-            );
-        }
-
-    }, [date]);
-
-    useEffect(() => {
         const fetchCounts = async () => {
             try {
                 const formattedDate = DateFormatter(date);
@@ -44,6 +27,22 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate }) => {
                 console.error("Error fetching image counts:", err);
             }
         };
+
+        if (ongoingDate) {
+            const currentDate = localStorage.getItem("date");
+            const formattedDate = DateFormatter(currentDate);
+
+            if (!canRequest && userData.role !== "Administrator" && ongoingDate !== formattedDate) {
+                sweetShowMessage(
+                    "warning",
+                    "!Unfinished Entries!",
+                    `Can't proceed! You have unfinished entries!<br>Date: ${ongoingDate}`,
+                    "Ok",
+                    "Cancel"
+                );
+            }
+        }
+
         fetchCounts();
     }, [date]);
 
