@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DocumentFields from "./components/DocumentFields";
 import PartyFields from "./components/PartyFields.jsx";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, NutIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import EntryHeader from "./components/EntryHeader.jsx";
 import ItemList from "./components/ItemList.jsx";
@@ -12,8 +12,9 @@ import LoadingModal from "../../components/LoadingModal.jsx";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
 import { DateFormatter } from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
+import { buildData } from "./components/BuildData.jsx";
 
-const EntryPage = ({ canRequest, date, ongoingDate }) => {
+const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const navigate = useNavigate();
 
     const [currentStep, setCurrentStep] = useState(0);
@@ -23,6 +24,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
     const [entry, setEntry] = useState(null);
     const [entryID, setEntryID] = useState(0);
     const [imageURL, setImageURL] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     /* useEffect(() => {
         fetchBatchIDs();
@@ -44,8 +46,10 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
 
         const currentDate = localStorage.getItem("date");
         const formattedDate = DateFormatter(currentDate);
+        const todayFormattedDate = DateFormatter(todaysDate);
 
-        if (!canRequest && ongoingDate !== formattedDate) {
+        if (!canRequest && ongoingDate !== formattedDate && todayFormattedDate === formattedDate) {
+            setLoading(true);
             navigate("/dashboard");
         }
 
@@ -57,10 +61,25 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
             localStorage.setItem("IDs", JSON.stringify(responseIDs));
 
             const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date: date });
-            setEntry(responseEntry[0]);
+
+            if (!responseEntry || responseEntry.length === 0) {
+                console.warn("No entries found");
+                setEntry(null);
+                return;
+            }
+
+            const firstEntry = responseEntry[0];
+
+            if (!firstEntry) {
+                console.warn("First entry is undefined");
+                return;
+            }
+
+            setEntry(buildData(firstEntry));
 
             const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
             setImageIndex(index);
+            setLoading(false);
 
         } catch (error) {
             console.error("Error fetching IDs:", error);
@@ -68,13 +87,17 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
     };
 
     const fetchImage = async () => {
-        if (!entry?.imageName) return;
+        if (!entry?.imageName) {
+            setImageURL(null);
+            return;
+        };
 
         try {
             const responseImage = await imageAPI.getEntryImage(entry.imageName);
 
             if (responseImage.success) {
                 setImageURL(responseImage.imageUrl);
+                setLoading(false);
             }
 
         } catch (error) {
@@ -85,12 +108,12 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
     const fetchEntryByID = async () => {
         if (!entryID || entryID === entry?.id) return;
         const response = await entriesAPI.entriesData({ id: entryID, date });
-        setEntry(response);
-
+        setEntry(buildData(response));
+        setLoading(false);
     };
 
     const setIndexToNext = () => {
-        const ids = JSON.parse(localStorage.getItem("IDs"));
+        const ids = JSON.parse(localStorage.getItem("IDs")) || [];
         if (imageIndex >= ids.length - 1) return;
 
         const newIndex = imageIndex + 1;
@@ -101,7 +124,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
     };
 
     const setIndexToPrev = () => {
-        const ids = JSON.parse(localStorage.getItem("IDs"));
+        const ids = JSON.parse(localStorage.getItem("IDs")) || [];
         if (imageIndex <= 0) return;
 
         const prevIndex = imageIndex - 1;
@@ -145,7 +168,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
         exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 }),
     };
 
-    if (!canRequest && !entry) {
+    if (loading) {
         return <LoadingModal />;
     }
 
@@ -163,7 +186,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
                 instructions={entry?.instructions}
                 totals={entry?.totals}
                 index={imageIndex}
-                itemLength={JSON.parse(localStorage.getItem("IDs")).length}
+                itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
             />
 
             {/* Main Content */}
@@ -207,7 +230,7 @@ const EntryPage = ({ canRequest, date, ongoingDate }) => {
                         >
                             {/* Left Panel */}
                             <div className="w-1/2 rounded-2xl border border-gray-200 shadow-inner">
-                                <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs")).length}
+                                <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
                                     onPrev={setIndexToPrev} onNext={setIndexToNext} />
                             </div>
 

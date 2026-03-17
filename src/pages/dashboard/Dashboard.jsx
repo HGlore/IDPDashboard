@@ -10,7 +10,7 @@ import * as imageAPI from "../../api/imageAPI.js";
 import * as entriesAPI from "../../api/entriesAPI.js";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
 
-const Dashboard = ({ date, userData, canRequest, ongoingDate }) => {
+const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
     const [imageCounts, setImageCounts] = useState({
         totalQueue: 0,
         newImages: 0,
@@ -31,8 +31,10 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate }) => {
         if (ongoingDate) {
             const currentDate = localStorage.getItem("date");
             const formattedDate = DateFormatter(currentDate);
+            const todayFormattedDate = DateFormatter(todaysDate);
 
-            if (!canRequest && userData.role !== "Administrator" && ongoingDate !== formattedDate) {
+            if (!canRequest && userData.role !== "Administrator"
+                && ongoingDate !== formattedDate && todayFormattedDate === formattedDate) {
                 sweetShowMessage(
                     "warning",
                     "!Unfinished Entries!",

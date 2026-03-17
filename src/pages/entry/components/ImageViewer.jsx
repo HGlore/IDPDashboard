@@ -30,13 +30,6 @@ const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
         setDragging(false);
     };
 
-    useEffect(() => {
-        if (!src) {
-
-        }
-
-    }, [src]);
-
     return (
         <div
             className="w-full h-full flex items-center justify-center bg-gray-50 rounded-2xl overflow-hidden relative shadow-inner"
@@ -47,7 +40,7 @@ const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
             {src ? (
                 <>
                     <img
-                        src={src}
+                        src={src || ""}
                         alt={alt || "Preview"}
                         onMouseDown={handleMouseDown}
                         style={{
