@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const EntryHeader = ({ instructions, totals, index, itemLength }) => {
+const EntryHeader = ({ instructions, totals, index, itemLength, setEntry, isBrowse }) => {
     const [instructionLine, setInstructionLine] = useState(instructions?.line || "");
     const [totalPalletCnt, setTotalPalletCnt] = useState(totals?.totalPalletCnt || 0);
     const [totalHandlingUnit, setTotalHandlingUnit] = useState(totals?.totalHandlingUnit || 0);
@@ -13,11 +13,24 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
     }, [instructions]);
 
     useEffect(() => {
-        setTotalPalletCnt(totals?.totalPalletCnt || 0);
-        setTotalHandlingUnit(totals?.totalHandlingUnit || 0);
-        setTotalPieces(totals?.totalPieces || 0);
+        setTotalPalletCnt(totals?.totalPalletCnt || "");
+        setTotalHandlingUnit(totals?.totalHandlingUnit || "");
+        setTotalPieces(totals?.totalPieces || "");
         setTotalWeight(totals?.totalWeight || "");
     }, [totals]);
+
+    const handleChange = ({ newValue, parentKey, keyField }) => {
+        /* const newValue = e.target.value; */
+        // setInputValue(newValue);
+
+        setEntry(prev => ({
+            ...prev,
+            [parentKey]: {
+                ...prev[parentKey],
+                [keyField]: newValue
+            }
+        }));
+    };
 
     return (
         <div className="flex items-end gap-5">
@@ -32,7 +45,14 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
                 <input
                     type="text"
                     value={instructionLine}
-                    onChange={(e) => setInstructionLine(e.target.value)}
+                    readOnly={isBrowse}
+                    onChange={(e) =>
+                        handleChange({
+                            newValue: e.target.value,
+                            parentKey: "instructions",
+                            keyField: "line"
+                        })
+                    }
                     className="w-full border border-gray-300 rounded-md px-1.5 py-1 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500
                      focus:border-blue-500 transition"
@@ -47,7 +67,13 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
                 <input
                     type="number"
                     value={totalPalletCnt}
-                    onChange={(e) => setTotalPalletCnt(e.target.value)}
+                    readOnly={isBrowse}
+                    onChange={(e) =>
+                        handleChange({
+                            newValue: e.target.value,
+                            parentKey: "totals",
+                            keyField: "totalPalletCnt"
+                        })}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -61,7 +87,13 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
                 <input
                     type="number"
                     value={totalHandlingUnit}
-                    onChange={(e) => setTotalHandlingUnit(e.target.value)}
+                    readOnly={isBrowse}
+                    onChange={(e) =>
+                        handleChange({
+                            newValue: e.target.value,
+                            parentKey: "totals",
+                            keyField: "totalHandlingUnit"
+                        })}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -75,7 +107,13 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
                 <input
                     type="number"
                     value={totalPieces}
-                    onChange={(e) => setTotalPieces(e.target.value)}
+                    readOnly={isBrowse}
+                    onChange={(e) =>
+                        handleChange({
+                            newValue: e.target.value,
+                            parentKey: "totals",
+                            keyField: "totalPieces"
+                        })}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -89,7 +127,13 @@ const EntryHeader = ({ instructions, totals, index, itemLength }) => {
                 <input
                     type="text"
                     value={totalWeight}
-                    onChange={(e) => setTotalWeight(e.target.value)}
+                    readOnly={isBrowse}
+                    onChange={(e) =>
+                        handleChange({
+                            newValue: e.target.value,
+                            parentKey: "totals",
+                            keyField: "totalWeight"
+                        })}
                     className="w-full border border-gray-300 rounded-md px-1 py-1 text-sm text-center
                      focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />

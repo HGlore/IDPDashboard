@@ -12,7 +12,7 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
         pieces: "",
         description: "",
         weight: "",
-        classType: "",
+        clss: "",
         nmfc: "",
         dimension: "",
     };
@@ -24,7 +24,7 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
     useEffect(() => {
         if (mode === "add") setForm(emptyForm);
         else if (itemData) setForm({ ...itemData });
-    }, [itemData, mode]);
+    }, [itemData, mode, isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,7 +41,19 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
     };
     const handleSubmit = () => {
         onSave(form);
+        setForm(emptyForm);
         onClose();
+    };
+
+    const handleEditItem = (itemId, updatedData) => {
+        setEntry(prev => ({
+            ...prev,
+            items: prev.items.map(item =>
+                item.id === itemId
+                    ? { ...item, ...updatedData }
+                    : item
+            )
+        }));
     };
 
     const variants = {
@@ -132,28 +144,63 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
                                         className="absolute w-full"
                                     >
                                         {currentStep === 0 && (
-                                            <div className="grid grid-cols-2 gap-3 p-1">
-                                                <input name="pallet" value={form.pallet} onChange={handleChange}
-                                                    placeholder="Pallet" className="input" />
-                                                <input name="handlingUnit" value={form.handlingUnit}
-                                                    onChange={handleChange} placeholder="Handling Unit"
-                                                    className="input" />
-                                                <input name="packageType" value={form.packageType}
-                                                    onChange={handleChange} placeholder="Package Type"
-                                                    className="input" />
-                                                <input name="pieces" value={form.pieces} onChange={handleChange}
-                                                    placeholder="Pieces" className="input" />
-                                                <input name="weight" value={form.weight} onChange={handleChange}
-                                                    placeholder="Weight" className="input" />
-                                                <input name="classType" value={form.classType} onChange={handleChange}
-                                                    placeholder="Class" className="input" />
-                                                <input name="nmfc" value={form.nmfc} onChange={handleChange}
-                                                    placeholder="NMFC" className="input" />
-                                                <input name="dimension" value={form.dimension} onChange={handleChange}
-                                                    placeholder="Dimension" className="input" />
-                                                <textarea name="description" value={form.description}
-                                                    onChange={handleChange} placeholder="Description"
-                                                    className="col-span-2 input h-24" />
+                                            <div className="grid grid-cols-2 gap-2 p-1">
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">Pallet</label>
+                                                    <input name="pallet" value={form.pallet} onChange={handleChange}
+                                                        placeholder="Pallet" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">HandlingUnit</label>
+                                                    <input name="handlingUnit" value={form.handlingUnit}
+                                                        onChange={handleChange} placeholder="Handling Unit"
+                                                        className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">PackageType</label>
+                                                    <input name="packageType" value={form.packageType}
+                                                        onChange={handleChange} placeholder="Package Type"
+                                                        className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">Pieces</label>
+                                                    <input name="pieces" value={form.pieces} onChange={handleChange}
+                                                        placeholder="Pieces" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">Weight</label>
+                                                    <input name="weight" value={form.weight} onChange={handleChange}
+                                                        placeholder="Weight" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">Class</label>
+                                                    <input name="clss" value={form.classType} onChange={handleChange}
+                                                        placeholder="Class" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">NMFC</label>
+                                                    <input name="nmfc" value={form.nmfc} onChange={handleChange}
+                                                        placeholder="NMFC" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col">
+                                                    <label className="text-sm font-mono text-gray-700">Dimension</label>
+                                                    <input name="dimension" value={form.dimension} onChange={handleChange}
+                                                        placeholder="Dimension" className="input" />
+                                                </div>
+
+                                                <div className="flex flex-col mid: col-span-2">
+                                                    <label className="text-sm font-mono text-gray-700">Description</label>
+                                                    <textarea name="description" value={form.description}
+                                                        onChange={handleChange} placeholder="Description"
+                                                        className="col-span-2 input h-22" />
+                                                </div>
                                             </div>
                                         )}
                                         {currentStep === 1 && (

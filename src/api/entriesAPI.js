@@ -70,3 +70,19 @@ export const entriesIds = async () => {
         throw new Error(error.response?.data?.message || error.message);
     }
 };
+
+export const updateEntry = async (entry) => {
+    try {
+        const response = await axios.post(
+            `${API_ENV.LOCAL_URL}.api/me/update-entries`,
+            { documentDTO: entry },
+            {
+                withCredentials: true
+            }
+        );
+
+        return { success: true }
+    } catch (error) {
+        throw new Error(error.response?.data?.message || error.message);
+    }
+};

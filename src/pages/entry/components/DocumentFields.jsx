@@ -1,29 +1,29 @@
 import React from 'react';
 import FieldCard from "./FieldCard.jsx";
 
-const DocumentFields = ({ document }) => {
+const DocumentFields = ({ document, setEntry }) => {
 
     const fields = [
-        { name: "Date", value: `${document?.date}`, placeholder: "Date..." },
-        { name: "StartTime", value: `${document?.startTime}`, placeholder: "StartTime..." },
-        { name: "EndTime", value: `${document?.endTime}`, placeholder: "EndTime..." },
-        { name: "Image", value: `${document?.image}`, placeholder: "Image..." },
-        { name: "AccountType", value: `${document?.accountType}`, placeholder: "AccountType..." },
-        { name: "DetectedAccountType", value: `${document?.detectedAccType}`, placeholder: "DetectedAccountType..." },
-        { name: "BOLNumber", value: `${document?.bolNumber}`, placeholder: "BOLNumber..." },
-        { name: "MasterBOLNumber", value: `${document?.masterBolNumber}`, placeholder: "MasterBOLNumber..." },
-        { name: "PONumber", value: `${document?.poNumber}`, placeholder: "PONumber..." },
-        { name: "QuoteNumber", value: `${document?.quoteNumber}`, placeholder: "QuoteNumber..." },
-        { name: "Terms", value: `${document?.terms}`, placeholder: "Terms..." },
-        { name: "ShipperNumber", value: `${document?.shipperNumber}`, placeholder: "ShipperNumber..." },
-        { name: "Pronumber", value: `${document?.proNumber}`, placeholder: "Pronumber..." },
-        { name: "RANumber", value: `${document?.raNumber}`, placeholder: "RANumber..." },
-        { name: "EControlNumber", value: `${document?.eControlNumber}`, placeholder: "EControlNumber..." },
-        { name: "DriverNumber", value: `${document?.driverNumber}`, placeholder: "DriverNumber..." },
-        { name: "RunNumber", value: `${document?.runNumber}`, placeholder: "RunNumber..." },
-        { name: "CubicFeet", value: `${document?.cubicFeet}`, placeholder: "CubicFeet..." },
-        { name: "TimeDeparted", value: `${document?.timeDeparted}`, placeholder: "TimeDeparted..." },
-        { name: "TimeArrived", value: `${document?.timeArrived}`, placeholder: "TimeArrived..." },
+        { label: "Date", key: "date", value: document?.date, placeholder: "Date..." },
+        { label: "StartTime", key: "startTime", value: document?.startTime, placeholder: "StartTime..." },
+        { label: "EndTime", key: "endTime", value: document?.endTime, placeholder: "EndTime..." },
+        { label: "Image", key: "image", value: document?.image, placeholder: "Image..." },
+        { label: "AccountType", key: "accountType", value: document?.accountType, placeholder: "AccountType..." },
+        { label: "DetectedAccType", key: "detectedAccType", value: document?.detectedAccType, placeholder: "DetectedAccountType..." },
+        { label: "BOLNumber", key: "bolNumber", value: document?.bolNumber, placeholder: "BOLnumber..." },
+        { label: "MasterBOLNumber", key: "masterBolNumber", value: document?.masterBolNumber, placeholder: "MasterBOLNumber..." },
+        { label: "PONumber", key: "poNumber", value: document?.poNumber, placeholder: "PONumber..." },
+        { label: "QuoteNumber", key: "quoteNumber", value: document?.quoteNumber, placeholder: "QuoteNumber..." },
+        { label: "Terms", key: "terms", value: document?.terms, placeholder: "Terms..." },
+        { label: "ShipperNumber", key: "shipperNumber", value: document?.shipperNumber, placeholder: "ShipperNumber..." },
+        { label: "ProNumber", key: "proNumber", value: document?.proNumber, placeholder: "ProNumber..." },
+        { label: "RANumber", key: "raNumber", value: document?.raNumber, placeholder: "RANumber..." },
+        { label: "EControlNumber", key: "eControlNumber", value: document?.eControlNumber, placeholder: "EControlNumber..." },
+        { label: "DriverNumber", key: "driverNumber", value: document?.driverNumber, placeholder: "DriverNumber..." },
+        { label: "RunNumber", key: "runNumber", value: document?.runNumber, placeholder: "RunNumber..." },
+        { label: "CubicFeet", key: "cubicFeet", value: document?.cubicFeet, placeholder: "CubicFeet..." },
+        { label: "TimeDeparted", key: "timeDeparted", value: document?.timeDeparted, placeholder: "TimeDeparted..." },
+        { label: "TimeArrived", key: "timeArrived", value: document?.timeArrived, placeholder: "TimeArrived..." },
     ];
 
     return (
@@ -34,9 +34,12 @@ const DocumentFields = ({ document }) => {
                 {fields.map((field, idx) => (
                     <FieldCard
                         key={document?.id + idx}
-                        name={field.name}
+                        label={field.label}
+                        keyField={field.key}
                         value={field.value}
                         placeholder={field.placeholder}
+                        setEntry={setEntry}
+                        parentKey={null}
                     />
                 ))}
             </div>

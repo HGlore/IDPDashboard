@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { returnedData } from './ReturnedData';
 
-const FieldCard = ({ name, value, placeholder, fieldWidth, onChange }) => {
+const FieldCard = ({ label, keyField, value, placeholder, fieldWidth, setEntry, parentKey }) => {
     const [inputValue, setInputValue] = useState(value || "");
 
     useEffect(() => {
@@ -8,13 +9,35 @@ const FieldCard = ({ name, value, placeholder, fieldWidth, onChange }) => {
     }, [value]);
 
     const handleChange = (e) => {
-        setInputValue(e.target.value);
-        onChange?.(e.target.value);
+        const newValue = e.target.value;
+        setInputValue(newValue);
+
+        if (!parentKey) {
+            setEntry(prev => ({
+                ...prev,
+                [keyField]: newValue
+            }));
+        } else if (parentKey === "items") {
+            setEntry(prev => ({
+                ...prev,
+                items: prev.items.map((item, i) =>
+                    i === index ? { ...item, [keyField]: newValue } : item
+                )
+            }));
+        } else if (parentKey && parentKey !== "items") {
+            setEntry(prev => ({
+                ...prev,
+                [parentKey]: {
+                    ...prev[parentKey],
+                    [keyField]: newValue
+                }
+            }));
+        }
     };
 
     return (
         <div className="flex flex-col m-1 w-full">
-            <label className="mb-1 text-sm font-semibold text-gray-700">{name}</label>
+            <label className="mb-1 text-sm font-semibold text-gray-700">{label}</label>
             <input
                 type="text"
                 value={inputValue}

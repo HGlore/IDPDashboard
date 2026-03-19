@@ -12,7 +12,8 @@ import LoadingModal from "../../components/LoadingModal.jsx";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
 import { DateFormatter } from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
-import { buildData } from "./components/BuildData.jsx";
+import { returnedData } from "./components/ReturnedData.jsx";
+import ModeManager from "./components/ModeManager.jsx";
 
 const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const navigate = useNavigate();
@@ -25,6 +26,8 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const [entryID, setEntryID] = useState(0);
     const [imageURL, setImageURL] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [mode, setMode] = useState("Entry");
+    const [isBrowse, setIsBrowse] = useState(false);
 
     /* useEffect(() => {
         fetchBatchIDs();
@@ -55,6 +58,14 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
 
     }, [date]);
 
+    useEffect(() => {
+        if (mode === "Entry") {
+            fetchBatchIDs();
+            console.log("Back to Entry: ", mode)
+        }
+
+    }, [mode]);
+
     const fetchBatchIDs = async () => {
         try {
             const responseIDs = await entriesAPI.entriesIds();
@@ -75,9 +86,11 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                 return;
             }
 
-            setEntry(buildData(firstEntry));
+            setEntry(returnedData(firstEntry));
 
-            const index = responseIDs.findIndex((id) => Number(id) === responseEntry[0]?.id);
+            localStorage.setItem("orig_entry", JSON.stringify(returnedData(firstEntry)))
+
+            const index = responseIDs.findIndex((id) => Number(id) === firstEntry?.id);
             setImageIndex(index);
             setLoading(false);
 
@@ -101,14 +114,14 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             }
 
         } catch (error) {
-            console.error("Error fetching image: ", error);
+            console.warn("Error fetching image: ", error);
         }
     };
 
     const fetchEntryByID = async () => {
         if (!entryID || entryID === entry?.id) return;
         const response = await entriesAPI.entriesData({ id: entryID, date });
-        setEntry(buildData(response));
+        setEntry(returnedData(response));
         setLoading(false);
     };
 
@@ -173,20 +186,26 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     }
 
     const pages = [
-        { id: 0, component: entry && <DocumentFields document={entry} /> },
-        { id: 1, component: entry && <PartyFields titleName="Shipper" fieldsData={entry?.shipper} /> },
-        { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} /> },
-        { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} /> },
+        { id: 0, component: entry && <DocumentFields document={entry} setEntry={setEntry} /> },
+        { id: 1, component: entry && <PartyFields titleName="Shipper" fieldsData={entry?.shipper} setEntry={setEntry} parentKey={"shipper"} /> },
+        { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} setEntry={setEntry} parentKey={"consignee"} /> },
+        { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} setEntry={setEntry} parentKey={"billTo"} /> },
     ];
 
     return (
-        <div className="p-5 min-h-screen bg-gray-50 flex flex-col gap-4">
+        <div className="p-5 min-h-screen bg-gray-50 flex flex-col gap-2">
+            {/* MODE */}
+            <ModeManager mode={mode} setMode={setMode} entry={entry}
+                setEntry={setEntry} setIsBrowse={setIsBrowse} />
+
             {/* Header */}
             <EntryHeader
                 instructions={entry?.instructions}
                 totals={entry?.totals}
                 index={imageIndex}
                 itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
+                setEntry={setEntry}
+                isBrowse={isBrowse}
             />
 
             {/* Main Content */}
@@ -204,7 +223,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                             className="absolute inset-0 flex flex-col bg-white/70 rounded-2xl shadow-lg overflow-hidden"
                         >
                             <div className="flex-1 overflow-y-auto p-4">
-                                <ItemList itemList={entry?.items} imageURL={imageURL} />
+                                <ItemList itemList={entry?.items} imageURL={imageURL} setEntry={setEntry} />
                             </div>
 
                             {/* Bottom Button */}
@@ -231,7 +250,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                             {/* Left Panel */}
                             <div className="w-1/2 rounded-2xl border border-gray-200 shadow-inner">
                                 <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
-                                    onPrev={setIndexToPrev} onNext={setIndexToNext} />
+                                    onPrev={setIndexToPrev} onNext={setIndexToNext} isBrowse={isBrowse} />
                             </div>
 
                             {/* Right Panel */}

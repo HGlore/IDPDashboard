@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
+const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext, isBrowse }) => {
     const [zoom, setZoom] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
@@ -70,8 +70,9 @@ const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
                     {/* Previous */}
                     <button
                         onClick={onPrev}
+                        disabled={!isBrowse}
                         className={`absolute left-2 top-1/2 -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 
-                            ${index === 0 ? "invisible" : ""}`}
+                            ${index === 0 || !isBrowse ? "invisible" : ""}`}
                     >
                         &#8592;
                     </button>
@@ -80,7 +81,7 @@ const ImageViewer = ({ src, alt, index, itemLength, onPrev, onNext }) => {
                     <button
                         onClick={onNext}
                         className={`absolute right-2 top-1/2 -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full hover:bg-gray-800 
-                                ${index === (itemLength - 1) ? "invisible" : ""}`}
+                                ${index === (itemLength - 1) || !isBrowse ? "invisible" : ""}`}
                     >
                         &#8594;
                     </button>

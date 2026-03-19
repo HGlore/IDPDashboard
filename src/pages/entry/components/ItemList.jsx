@@ -3,7 +3,7 @@ import { FiEdit, FiTrash2, FiPlus, FiEye } from "react-icons/fi";
 import { sweetShowMessage } from "../../../utils/ShowAlert.js";
 import ItemModal from "./ItemModal.jsx";
 
-export default function ItemList({ itemList = [], imageURL }) {
+export default function ItemList({ itemList = [], imageURL, setEntry }) {
     const [items, setItems] = useState(itemList);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("add");
@@ -18,7 +18,11 @@ export default function ItemList({ itemList = [], imageURL }) {
             "Are you sure you want to remove this item?", "Remove", "Cancel");
 
         if (result.isConfirmed) {
-            setItems(items.filter((item) => item.id !== id));
+            /* setItems(items.filter((item) => item.id !== id)); */
+            setEntry(prev => ({
+                ...prev,
+                items: prev.items.filter(item => item.id !== id)
+            }));
         }
     };
 
@@ -42,10 +46,36 @@ export default function ItemList({ itemList = [], imageURL }) {
 
     const handleSave = (data) => {
         if (modalMode === "add") {
-            setItems([...items, { ...data, id: Date.now() }]);
+            handleAddItem(data);
+            /* setItems([...items, { ...data, id: Date.now() }]); */
         } else if (modalMode === "edit") {
-            setItems(items.map(i => i.id === selectedItem.id ? { ...i, ...data } : i));
+            /* setItems(items.map(i => i.id === selectedItem.id ? { ...i, ...data } : i)); */
+            handleEditItem(data);
         }
+    };
+
+    const handleAddItem = (newItemData) => {
+        setEntry(prev => ({
+            ...prev,
+            items: [
+                ...prev.items,
+                {
+                    ...newItemData,
+                    id: Date.now(),
+                }
+            ]
+        }));
+    };
+
+    const handleEditItem = (editedItem) => {
+        setEntry(prev => ({
+            ...prev,
+            items: prev.items.map(item =>
+                item.id === editedItem.id
+                    ? { ...item, ...editedItem }
+                    : item
+            )
+        }));
     };
 
     return (
@@ -145,7 +175,7 @@ export default function ItemList({ itemList = [], imageURL }) {
                                 <td className="px-4 py-2 align-middle">
                                     <span
                                         className="px-2 py-1 rounded-md bg-indigo-100 text-indigo-600 text-xs font-semibold">
-                                        {item.classType}
+                                        {item.clss}
                                     </span>
                                 </td>
 

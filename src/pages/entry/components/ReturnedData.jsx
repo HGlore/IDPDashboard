@@ -1,4 +1,4 @@
-export const buildData = (document) => {
+export const returnedData = (document) => {
     return {
         id: document.id,
         imageName: document.imageName,
