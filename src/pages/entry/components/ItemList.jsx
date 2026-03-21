@@ -3,15 +3,16 @@ import { FiEdit, FiTrash2, FiPlus, FiEye } from "react-icons/fi";
 import { sweetShowMessage } from "../../../utils/ShowAlert.js";
 import ItemModal from "./ItemModal.jsx";
 
-export default function ItemList({ itemList = [], imageURL, setEntry }) {
-    const [items, setItems] = useState(itemList);
+export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }) {
+    /* const [items, setItems] = useState(itemList); */
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
 
-    useEffect(() => {
-        if (itemList.length) setItems(itemList);
-    }, [itemList]);
+    /* useEffect(() => {
+        if (itemList.length) { setItems(itemList); }
+        else { setItems([]); }
+    }, [itemList]); */
 
     const handleRemove = async (id) => {
         const result = await sweetShowMessage("warning", "Remove Item:",
@@ -88,11 +89,12 @@ export default function ItemList({ itemList = [], imageURL, setEntry }) {
                         Item List
                     </h2>
                     <p className="text-sm text-slate-500">
-                        Manage your shipment items
+                        Manage your document items
                     </p>
                 </div>
 
                 <button
+                    disabled={isBrowse || !itemList.length}
                     onClick={openAdd}
                     className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
@@ -141,7 +143,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry }) {
 
                     {/* Body */}
                     <tbody>
-                        {items.map((item, index) => (
+                        {itemList.map((item, index) => (
                             <tr
                                 key={item.id}
                                 className="group border-b last:border-none hover:bg-blue-50/40 transition-all duration-300"
@@ -193,12 +195,14 @@ export default function ItemList({ itemList = [], imageURL, setEntry }) {
                                         </button>
 
                                         <button
+                                            disabled={isBrowse}
                                             onClick={() => openEdit(item)}
                                             className="p-2 rounded-lg hover:bg-blue-100 text-blue-600 hover:scale-110 transition-all">
                                             <FiEdit />
                                         </button>
 
                                         <button
+                                            disabled={isBrowse}
                                             onClick={() => handleRemove(item.id)}
                                             className="p-2 rounded-lg hover:bg-red-100 text-red-500 hover:scale-110 transition-all"
                                         >
@@ -214,7 +218,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry }) {
 
             {/* Footer Info */}
             <div className="mt-4 text-sm text-slate-500 flex justify-between">
-                <span>Total Items: {items.length}</span>
+                <span>Total Items: {itemList.length}</span>
                 {/*<span className="italic">Double-click row to view details</span>*/}
             </div>
 
@@ -225,6 +229,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry }) {
                 mode={modalMode}
                 itemData={selectedItem}
                 imageURL={imageURL}
+                isBrowse={isBrowse}
             />
         </div>
     );

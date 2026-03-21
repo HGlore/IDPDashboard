@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import ImageViewer from "./ImageViewer";
 
-const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }) => {
+const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL, isBrowse }) => {
 
     const emptyForm = {
         pallet: "",
@@ -148,58 +148,58 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">Pallet</label>
                                                     <input name="pallet" value={form.pallet} onChange={handleChange}
-                                                        placeholder="Pallet" className="input" />
+                                                        placeholder="Pallet" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">HandlingUnit</label>
                                                     <input name="handlingUnit" value={form.handlingUnit}
                                                         onChange={handleChange} placeholder="Handling Unit"
-                                                        className="input" />
+                                                        className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">PackageType</label>
                                                     <input name="packageType" value={form.packageType}
                                                         onChange={handleChange} placeholder="Package Type"
-                                                        className="input" />
+                                                        className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">Pieces</label>
                                                     <input name="pieces" value={form.pieces} onChange={handleChange}
-                                                        placeholder="Pieces" className="input" />
+                                                        placeholder="Pieces" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">Weight</label>
                                                     <input name="weight" value={form.weight} onChange={handleChange}
-                                                        placeholder="Weight" className="input" />
+                                                        placeholder="Weight" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">Class</label>
                                                     <input name="clss" value={form.classType} onChange={handleChange}
-                                                        placeholder="Class" className="input" />
+                                                        placeholder="Class" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">NMFC</label>
                                                     <input name="nmfc" value={form.nmfc} onChange={handleChange}
-                                                        placeholder="NMFC" className="input" />
+                                                        placeholder="NMFC" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col">
                                                     <label className="text-sm font-mono text-gray-700">Dimension</label>
                                                     <input name="dimension" value={form.dimension} onChange={handleChange}
-                                                        placeholder="Dimension" className="input" />
+                                                        placeholder="Dimension" className="input" readOnly={isBrowse} />
                                                 </div>
 
                                                 <div className="flex flex-col mid: col-span-2">
                                                     <label className="text-sm font-mono text-gray-700">Description</label>
                                                     <textarea name="description" value={form.description}
                                                         onChange={handleChange} placeholder="Description"
-                                                        className="col-span-2 input h-22" />
+                                                        className="col-span-2 input h-22" readOnly={isBrowse} />
                                                 </div>
                                             </div>
                                         )}
@@ -226,7 +226,7 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL }
                                         Cancel
                                     </button>
                                     {mode !== "view" && (
-                                        <button onClick={handleSubmit}
+                                        <button disabled={isBrowse} onClick={handleSubmit}
                                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                                             Save
                                         </button>

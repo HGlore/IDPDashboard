@@ -1,16 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { sweetShowMessage } from "../../../utils/ShowAlert";
 import { returnedData } from "./ReturnedData";
 
 const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
-    const navigate = useNavigate();
 
     const handleChangeMode = async (m) => {
         const backup_entry = localStorage.getItem("orig_entry");
-        console.log("Backup: ", backup_entry)
-        console.log("Recieved Entry: ", JSON.stringify(entry))
 
-        if (mode === "Entry" && backup_entry) {
+        if (mode === "Entry" && entry && backup_entry) {
             if (JSON.stringify(entry) === backup_entry) {
                 setMode(m);
                 setIsBrowse(true);
@@ -25,6 +22,7 @@ const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
 
                 if (result.isConfirmed) {
                     setEntry(returnedData(JSON.parse(backup_entry)));
+                    setIsBrowse(true);
                     setMode(m);
                 } else {
                     setIsBrowse(false);

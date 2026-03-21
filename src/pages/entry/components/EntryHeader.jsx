@@ -18,7 +18,7 @@ const EntryHeader = ({ instructions, totals, index, itemLength, setEntry, isBrow
         setTotalPieces(totals?.totalPieces || "");
         setTotalWeight(totals?.totalWeight || "");
     }, [totals]);
-
+ 
     const handleChange = ({ newValue, parentKey, keyField }) => {
         /* const newValue = e.target.value; */
         // setInputValue(newValue);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { returnedData } from './ReturnedData';
 
-const FieldCard = ({ label, keyField, value, placeholder, fieldWidth, setEntry, parentKey }) => {
+const FieldCard = ({ label, keyField, value, placeholder, fieldWidth, setEntry, parentKey, isBrowse }) => {
     const [inputValue, setInputValue] = useState(value || "");
 
     useEffect(() => {
@@ -40,6 +40,7 @@ const FieldCard = ({ label, keyField, value, placeholder, fieldWidth, setEntry, 
             <label className="mb-1 text-sm font-semibold text-gray-700">{label}</label>
             <input
                 type="text"
+                readOnly={isBrowse}
                 value={inputValue}
                 placeholder={placeholder}
                 onChange={handleChange}

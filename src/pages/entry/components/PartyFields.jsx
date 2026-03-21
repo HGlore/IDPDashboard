@@ -1,6 +1,6 @@
 import FieldCard from "./FieldCard.jsx";
 
-const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
+const PartyFields = ({ titleName, fieldsData, setEntry, parentKey, isBrowse }) => {
     const fields = {
         Name: fieldsData?.name,
         ContactName: fieldsData?.contactName,
@@ -26,6 +26,7 @@ const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
                 fieldWidth="100%"
                 setEntry={setEntry}
                 parentKey={parentKey}
+                isBrowse={isBrowse}
             />
 
             <div className="flex gap-4">
@@ -38,6 +39,7 @@ const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
                     className="flex-1"
                     setEntry={setEntry}
                     parentKey={parentKey}
+                    isBrowse={isBrowse}
                 />
                 <FieldCard
                     label="Phone"
@@ -48,6 +50,7 @@ const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
                     className="flex-1"
                     setEntry={setEntry}
                     parentKey={parentKey}
+                    isBrowse={isBrowse}
                 />
             </div>
 
@@ -59,6 +62,7 @@ const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
                 fieldWidth="100%"
                 setEntry={setEntry}
                 parentKey={parentKey}
+                isBrowse={isBrowse}
             />
             <FieldCard
                 label="AddressLine2"
@@ -68,12 +72,13 @@ const PartyFields = ({ titleName, fieldsData, setEntry, parentKey }) => {
                 fieldWidth="100%"
                 setEntry={setEntry}
                 parentKey={parentKey}
+                isBrowse={isBrowse}
             />
 
             <div className="flex gap-4">
-                <FieldCard label="City" keyField={"city"} value={fields.City} placeholder="City..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} />
-                <FieldCard label="State" keyField={"state"} value={fields.State} placeholder="State..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} />
-                <FieldCard label="ZipCode" keyField={"zipCode"} value={fields.ZipCode} placeholder="Zip Code..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} />
+                <FieldCard label="City" keyField={"city"} value={fields.City} placeholder="City..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} isBrowse={isBrowse} />
+                <FieldCard label="State" keyField={"state"} value={fields.State} placeholder="State..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} isBrowse={isBrowse} />
+                <FieldCard label="ZipCode" keyField={"zipCode"} value={fields.ZipCode} placeholder="Zip Code..." fieldWidth="100%" className="flex-1" setEntry={setEntry} parentKey={parentKey} isBrowse={isBrowse} />
             </div>
         </div>
     );

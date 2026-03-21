@@ -14,6 +14,7 @@ import { DateFormatter } from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
 import { returnedData } from "./components/ReturnedData.jsx";
 import ModeManager from "./components/ModeManager.jsx";
+import { toastShowError } from "../../utils/Toast.js";
 
 const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const navigate = useNavigate();
@@ -61,7 +62,6 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     useEffect(() => {
         if (mode === "Entry") {
             fetchBatchIDs();
-            console.log("Back to Entry: ", mode)
         }
 
     }, [mode]);
@@ -76,6 +76,9 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             if (!responseEntry || responseEntry.length === 0) {
                 console.warn("No entries found");
                 setEntry(null);
+                setImageIndex(-1);
+                setMode("Entry");
+                setIsBrowse(false);
                 return;
             }
 
@@ -87,6 +90,9 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             }
 
             setEntry(returnedData(firstEntry));
+            setEntryID(firstEntry.id);
+            setMode("Entry");
+            setIsBrowse(false);
 
             localStorage.setItem("orig_entry", JSON.stringify(returnedData(firstEntry)))
 
@@ -95,7 +101,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             setLoading(false);
 
         } catch (error) {
-            console.error("Error fetching IDs:", error);
+            console.warn("Error fetching IDs:", error);
         }
     };
 
@@ -148,7 +154,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     };
 
     const handleNext = () => {
-        if (currentStep < pages.length - 1) {
+        if (currentStep < pages.length - 1 && entry) {
             setDirection(1);
             setCurrentStep(currentStep + 1);
         } else {
@@ -186,10 +192,10 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     }
 
     const pages = [
-        { id: 0, component: entry && <DocumentFields document={entry} setEntry={setEntry} /> },
-        { id: 1, component: entry && <PartyFields titleName="Shipper" fieldsData={entry?.shipper} setEntry={setEntry} parentKey={"shipper"} /> },
-        { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} setEntry={setEntry} parentKey={"consignee"} /> },
-        { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} setEntry={setEntry} parentKey={"billTo"} /> },
+        { id: 0, component: entry && <DocumentFields document={entry} setEntry={setEntry} isBrowse={isBrowse} /> },
+        { id: 1, component: entry && <PartyFields titleName="Shipper" fieldsData={entry?.shipper} setEntry={setEntry} parentKey={"shipper"} isBrowse={isBrowse} /> },
+        { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} setEntry={setEntry} parentKey={"consignee"} isBrowse={isBrowse} /> },
+        { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} setEntry={setEntry} parentKey={"billTo"} isBrowse={isBrowse} /> },
     ];
 
     return (
@@ -223,7 +229,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                             className="absolute inset-0 flex flex-col bg-white/70 rounded-2xl shadow-lg overflow-hidden"
                         >
                             <div className="flex-1 overflow-y-auto p-4">
-                                <ItemList itemList={entry?.items} imageURL={imageURL} setEntry={setEntry} />
+                                <ItemList itemList={entry?.items} imageURL={imageURL} setEntry={setEntry} isBrowse={isBrowse} />
                             </div>
 
                             {/* Bottom Button */}
@@ -275,7 +281,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                                 <div className="flex justify-between mt-2">
                                     <button
                                         onClick={handlePrev}
-                                        className={`w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200 ${currentStep === 0 ? "invisible" : ""
+                                        className={`w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200 ${currentStep === 0 || !entry ? "invisible" : ""
                                             }`}
                                     >
                                         <ArrowLeft size={20} />

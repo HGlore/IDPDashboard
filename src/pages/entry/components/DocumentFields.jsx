@@ -1,7 +1,7 @@
 import React from 'react';
 import FieldCard from "./FieldCard.jsx";
 
-const DocumentFields = ({ document, setEntry }) => {
+const DocumentFields = ({ document, setEntry, isBrowse }) => {
 
     const fields = [
         { label: "Date", key: "date", value: document?.date, placeholder: "Date..." },
@@ -39,7 +39,8 @@ const DocumentFields = ({ document, setEntry }) => {
                         value={field.value}
                         placeholder={field.placeholder}
                         setEntry={setEntry}
-                        parentKey={null}
+                        parentKey={"Empty"}
+                        isBrowse={isBrowse}
                     />
                 ))}
             </div>
