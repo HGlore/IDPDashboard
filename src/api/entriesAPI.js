@@ -71,17 +71,23 @@ export const entriesIds = async () => {
     }
 };
 
-export const updateEntry = async (entry) => {
+export const saveEntry = async (entry, ids, updateTo) => {
     try {
         const response = await axios.post(
-            `${API_ENV.LOCAL_URL}.api/me/update-entries`,
-            { documentDTO: entry },
+            `${API_ENV.LOCAL_URL}/api/me/entries`,
+            {
+                documentDTO: entry,
+                ids: ids,
+                updateTo: updateTo
+            },
             {
                 withCredentials: true
             }
         );
 
-        return { success: true }
+        if (updateTo == "BILLED") { window.location.reload(); }
+
+        return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || error.message);
     }

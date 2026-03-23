@@ -94,7 +94,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                 </div>
 
                 <button
-                    disabled={isBrowse || !itemList.length}
+                    disabled={isBrowse}
                     onClick={openAdd}
                     className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >

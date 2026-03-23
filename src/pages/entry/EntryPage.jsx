@@ -14,7 +14,7 @@ import { DateFormatter } from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
 import { returnedData } from "./components/ReturnedData.jsx";
 import ModeManager from "./components/ModeManager.jsx";
-import { toastShowError } from "../../utils/Toast.js";
+import { toastShowError, toastShowSuccess } from "../../utils/Toast.js";
 
 const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const navigate = useNavigate();
@@ -29,10 +29,19 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState("Entry");
     const [isBrowse, setIsBrowse] = useState(false);
+    const [state, setState] = useState(0);
 
     /* useEffect(() => {
         fetchBatchIDs();
     }, []); */
+
+    useEffect(() => {
+        handleBackToForm();
+        setCurrentStep(0);
+        setIndexToNext();
+        fetchImage();
+        fetchBatchIDs();
+    }, [state]);
 
     useEffect(() => {
         fetchImage();
@@ -77,8 +86,8 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                 console.warn("No entries found");
                 setEntry(null);
                 setImageIndex(-1);
-                setMode("Entry");
-                setIsBrowse(false);
+                setMode("Browse");
+                setIsBrowse(true);
                 return;
             }
 
@@ -99,6 +108,8 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             const index = responseIDs.findIndex((id) => Number(id) === firstEntry?.id);
             setImageIndex(index);
             setLoading(false);
+
+            console.log("Being executed")
 
         } catch (error) {
             console.warn("Error fetching IDs:", error);
@@ -175,6 +186,60 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
         setShowItemList(false);
     };
 
+    const handleSave = async () => {
+        const result = await sweetShowMessage(
+            "info",
+            "Save Entry?",
+            "Save Current Entry",
+            "Save",
+            "Cancel"
+        );
+
+        if (result.isConfirmed) {
+            saveEntry();
+        }
+    };
+
+    const saveEntry = async () => {
+        const backup_entry_str = localStorage.getItem("orig_entry");
+        const curr_entry_str = JSON.stringify(entry);
+        var save = true;
+
+        if (curr_entry_str == backup_entry_str) {
+            toastShowError("No Changes of Data");
+            const result = await sweetShowMessage(
+                "info",
+                "No Changes of Data!",
+                "Save entry anyway?",
+                "Save anyway",
+                "Cancel"
+            );
+
+            if (!result.isConfirmed) {
+                save = false;
+                return;
+            }
+        }
+
+        if (save) {
+            var updateTo = "WAIT";
+            const ids = JSON.parse(localStorage.getItem("IDs"));
+            console.log("IDs: ", ids)
+            console.log("imageIndex: ", imageIndex)
+            console.log("ids length: ", ids.length - 1)
+
+            if (imageIndex == (ids.length - 1)) {
+                updateTo = "BILLED";
+            }
+
+            console.log("updateTo: ", updateTo)
+            entriesAPI.saveEntry(entry, ids, updateTo);
+            localStorage.setItem("orig_entry", JSON.stringify(returnedData(entry)))
+            toastShowSuccess("Saved Successfully");
+            setState(prev => prev + 1);
+        }
+    };
+
     const pageVariants = {
         enter: (dir) => ({ x: dir > 0 ? 400 : -400, opacity: 0, scale: 0.98 }),
         center: { x: 0, opacity: 1, scale: 1 },
@@ -233,12 +298,20 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                             </div>
 
                             {/* Bottom Button */}
-                            <div className="flex justify-start p-3 bg-white border-t border-gray-200">
+                            <div className="flex justify-between p-3 bg-white border-t border-gray-200">
                                 <button
                                     onClick={handleBackToForm}
                                     className="w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200"
                                 >
                                     <ArrowLeft size={20} />
+                                </button>
+
+                                <button
+                                    onClick={handleSave}
+                                    disabled={isBrowse}
+                                    className="w-20 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-green-800 hover:scale-110 transition-all duration-200">
+                                    <p className="font-mono">
+                                        Save</p>
                                 </button>
                             </div>
                         </motion.div>
