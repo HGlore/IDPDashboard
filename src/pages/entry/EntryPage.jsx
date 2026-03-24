@@ -36,14 +36,6 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     }, []); */
 
     useEffect(() => {
-        handleBackToForm();
-        setCurrentStep(0);
-        setIndexToNext();
-        fetchImage();
-        fetchBatchIDs();
-    }, [state]);
-
-    useEffect(() => {
         fetchImage();
 
     }, [entry]);
@@ -91,25 +83,24 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                 return;
             }
 
-            const firstEntry = responseEntry[0];
+            const returned_entry = responseEntry[0];
 
-            if (!firstEntry) {
+            if (!returned_entry) {
                 console.warn("First entry is undefined");
                 return;
             }
 
-            setEntry(returnedData(firstEntry));
-            setEntryID(firstEntry.id);
+            setEntry(returnedData(returned_entry));
+            setEntryID(returned_entry.id);
             setMode("Entry");
             setIsBrowse(false);
 
-            localStorage.setItem("orig_entry", JSON.stringify(returnedData(firstEntry)))
+            localStorage.setItem("orig_entry", JSON.stringify(returnedData(returned_entry)));
 
-            const index = responseIDs.findIndex((id) => Number(id) === firstEntry?.id);
+            const storedIds = JSON.parse(localStorage.getItem("IDs"));
+            const index = storedIds.findIndex((id) => Number(id) === returned_entry?.id);
             setImageIndex(index);
             setLoading(false);
-
-            console.log("Being executed")
 
         } catch (error) {
             console.warn("Error fetching IDs:", error);
@@ -139,6 +130,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
         if (!entryID || entryID === entry?.id) return;
         const response = await entriesAPI.entriesData({ id: entryID, date });
         setEntry(returnedData(response));
+        localStorage.setItem("orig_entry", JSON.stringify(returnedData(response)));
         setLoading(false);
     };
 
@@ -224,19 +216,29 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
         if (save) {
             var updateTo = "WAIT";
             const ids = JSON.parse(localStorage.getItem("IDs"));
-            console.log("IDs: ", ids)
-            console.log("imageIndex: ", imageIndex)
-            console.log("ids length: ", ids.length - 1)
 
             if (imageIndex == (ids.length - 1)) {
                 updateTo = "BILLED";
             }
 
-            console.log("updateTo: ", updateTo)
-            entriesAPI.saveEntry(entry, ids, updateTo);
-            localStorage.setItem("orig_entry", JSON.stringify(returnedData(entry)))
-            toastShowSuccess("Saved Successfully");
-            setState(prev => prev + 1);
+            const items_without_keys = entry.items.map(({ key_id, ...rest }) => rest);
+
+            const payload = {
+                ...entry,
+                items: items_without_keys
+            }
+
+            const response = await entriesAPI.saveEntry(payload, ids, updateTo);
+
+            if (response.success) {
+                toastShowSuccess("Saved Successfully");
+                handleBackToForm();
+                setCurrentStep(0);
+                setIndexToNext();
+            } else {
+                console.warn("Failed to save.");
+                toastShowError("Save Failed!!!");
+            }
         }
     };
 

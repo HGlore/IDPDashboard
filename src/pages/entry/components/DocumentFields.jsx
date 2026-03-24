@@ -39,7 +39,6 @@ const DocumentFields = ({ document, setEntry, isBrowse }) => {
                         value={field.value}
                         placeholder={field.placeholder}
                         setEntry={setEntry}
-                        parentKey={"Empty"}
                         isBrowse={isBrowse}
                     />
                 ))}

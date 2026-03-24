@@ -9,11 +9,6 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
 
-    /* useEffect(() => {
-        if (itemList.length) { setItems(itemList); }
-        else { setItems([]); }
-    }, [itemList]); */
-
     const handleRemove = async (id) => {
         const result = await sweetShowMessage("warning", "Remove Item:",
             "Are you sure you want to remove this item?", "Remove", "Cancel");
@@ -22,7 +17,8 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
             /* setItems(items.filter((item) => item.id !== id)); */
             setEntry(prev => ({
                 ...prev,
-                items: prev.items.filter(item => item.id !== id)
+                items: prev.items.filter(item => (item.id && item.id !== id)
+                    || item.key_id && item.key_id !== id)
             }));
         }
     };
@@ -62,7 +58,10 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                 ...prev.items,
                 {
                     ...newItemData,
-                    id: Date.now(),
+                    key_id: Date.now(),
+                    id: 0,
+                    archive: 0,
+                    documentTableID: 0,
                 }
             ]
         }));
@@ -72,7 +71,8 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
         setEntry(prev => ({
             ...prev,
             items: prev.items.map(item =>
-                item.id === editedItem.id
+                (item.id && item.id === editedItem.id)
+                    || (item.key_id && item.key_id === editedItem.key_id)
                     ? { ...item, ...editedItem }
                     : item
             )
@@ -203,7 +203,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
 
                                         <button
                                             disabled={isBrowse}
-                                            onClick={() => handleRemove(item.id)}
+                                            onClick={() => handleRemove(item.id || item.key_id)}
                                             className="p-2 rounded-lg hover:bg-red-100 text-red-500 hover:scale-110 transition-all"
                                         >
                                             <FiTrash2 />

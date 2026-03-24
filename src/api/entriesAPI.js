@@ -87,7 +87,7 @@ export const saveEntry = async (entry, ids, updateTo) => {
 
         if (updateTo == "BILLED") { window.location.reload(); }
 
-        return response.data;
+        return { success: true }
     } catch (error) {
         throw new Error(error.response?.data?.message || error.message);
     }
