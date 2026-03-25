@@ -12,7 +12,7 @@ import LoadingModal from "../../components/LoadingModal.jsx";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
 import { DateFormatter } from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
-import { returnedData } from "./components/ReturnedData.jsx";
+import { documentDTO } from "./dto/DocumentDTO.jsx";
 import ModeManager from "./components/ModeManager.jsx";
 import { toastShowError, toastShowSuccess } from "../../utils/Toast.js";
 
@@ -90,12 +90,12 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                 return;
             }
 
-            setEntry(returnedData(returned_entry));
+            setEntry(documentDTO(returned_entry));
             setEntryID(returned_entry.id);
             setMode("Entry");
             setIsBrowse(false);
 
-            localStorage.setItem("orig_entry", JSON.stringify(returnedData(returned_entry)));
+            localStorage.setItem("orig_entry", JSON.stringify(documentDTO(returned_entry)));
 
             const storedIds = JSON.parse(localStorage.getItem("IDs"));
             const index = storedIds.findIndex((id) => Number(id) === returned_entry?.id);
@@ -129,8 +129,8 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const fetchEntryByID = async () => {
         if (!entryID || entryID === entry?.id) return;
         const response = await entriesAPI.entriesData({ id: entryID, date });
-        setEntry(returnedData(response));
-        localStorage.setItem("orig_entry", JSON.stringify(returnedData(response)));
+        setEntry(documentDTO(response));
+        localStorage.setItem("orig_entry", JSON.stringify(documentDTO(response)));
         setLoading(false);
     };
 

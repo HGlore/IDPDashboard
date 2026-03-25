@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { sweetShowMessage } from "../../../utils/ShowAlert";
-import { returnedData } from "./ReturnedData";
+import { documentDTO } from "./../dto/DocumentDTO";
 
 const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
 
@@ -21,7 +21,7 @@ const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
                 );
 
                 if (result.isConfirmed) {
-                    setEntry(returnedData(JSON.parse(backup_entry)));
+                    setEntry(documentDTO(JSON.parse(backup_entry)));
                     setIsBrowse(true);
                     setMode(m);
                 } else {

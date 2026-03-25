@@ -1,4 +1,4 @@
-export const returnedData = (document) => {
+export const documentDTO = (document) => {
     return {
         id: document.id,
         imageName: document.imageName,

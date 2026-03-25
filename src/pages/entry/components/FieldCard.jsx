@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { returnedData } from './ReturnedData';
 
 const FieldCard = ({ label, keyField, value, placeholder, fieldWidth, setEntry, parentKey, isBrowse }) => {
     const [inputValue, setInputValue] = useState(value || "");

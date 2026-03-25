@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { eachHourOfInterval, format } from "date-fns"
 import {
     LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
     Label,
@@ -7,33 +8,48 @@ import {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const LineStatistics = () => {
-    const [lineData, setLineData] = useState([
-        { time: "12 AM", sales: 200 },
-        { time: "1 AM", sales: 400 },
-        { time: "2 AM", sales: 300 },
-        { time: "3 AM", sales: 450 },
-        { time: "4 AM", sales: 500 },
-        { time: "5 AM", sales: 500 },
-        { time: "6 AM", sales: 500 },
-        { time: "7 AM", sales: 500 },
-        { time: "8 AM", sales: 500 },
-        { time: "9 AM", sales: 500 },
-        { time: "10 AM", sales: 500 },
-        { time: "11 AM", sales: 500 },
-        { time: "12 PM", sales: 500 },
-        { time: "1 PM", sales: 500 },
-        { time: "2 PM", sales: 300 },
-        { time: "3 PM", sales: 450 },
-        { time: "4 PM", sales: 500 },
-        { time: "5 PM", sales: 500 },
-        { time: "6 PM", sales: 500 },
-        { time: "7 PM", sales: 500 },
-        { time: "8 PM", sales: 500 },
-        { time: "9 PM", sales: 500 },
-        { time: "10 PM", sales: 500 },
-        { time: "11 PM", sales: 500 },
-    ]);
+const LineStatistics = ({ billedIntervalList }) => {
+
+    const intervals = eachHourOfInterval({
+        start: new Date(2026, 2, 19, 0, 0, 0),
+        end: new Date(2026, 2, 19, 23, 59, 0),
+    }, { step: 1 });
+
+    const formattedIntervals = intervals.map(date =>
+        format(date, 'h a')
+    );
+
+    const lineData = formattedIntervals.map(i => {
+        return { time: i, billed: i === billedIntervalList?.time ? billedIntervalList?.billed : 0 }
+    })
+
+    /* const [lineData, setLineData] = useState([
+        { time: "12 AM", count: billed[0] || 0 },
+        { time: "1 AM", count: billed[1] || 0 },
+        { time: "2 AM", count: billed[2] || 0 },
+        { time: "3 AM", count: billed[3] || 0 },
+        { time: "4 AM", count: billed[4] || 0 },
+        { time: "5 AM", count: billed[5] || 0 },
+        { time: "6 AM", count: billed[6] || 0 },
+        { time: "7 AM", count: billed[7] || 0 },
+        { time: "8 AM", count: billed[8] || 0 },
+        { time: "9 AM", count: billed[9] || 0 },
+        { time: "10 AM", count: billed[10] || 0 },
+        { time: "11 AM", count: billed[11] || 0 },
+        { time: "12 PM", count: billed[12] || 0 },
+        { time: "1 PM", count: billed[13] || 0 },
+        { time: "2 PM", count: billed[14] || 0 },
+        { time: "3 PM", count: billed[15] || 0 },
+        { time: "4 PM", count: billed[16] || 0 },
+        { time: "5 PM", count: billed[17] || 0 },
+        { time: "6 PM", count: billed[18] || 0 },
+        { time: "7 PM", count: billed[19] || 0 },
+        { time: "8 PM", count: billed[20] || 0 },
+        { time: "9 PM", count: billed[21] || 0 },
+        { time: "10 PM", count: billed[22] || 0 },
+        { time: "11 PM", count: billed[23] || 0 },
+    ]); */
+
 
     return (
         <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.4)] rounded-lg flex items-center justify-center pt-4 ml-3 h-full">
@@ -60,7 +76,7 @@ const LineStatistics = () => {
                             </YAxis>
                             <Tooltip />
                             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                            <Line type="monotone" dataKey="sales" stroke="#8884d8" strokeWidth={2} />
+                            <Line type="monotone" dataKey="billed" stroke="#8884d8" strokeWidth={2} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
@@ -70,4 +86,3 @@ const LineStatistics = () => {
 };
 
 export default LineStatistics
-

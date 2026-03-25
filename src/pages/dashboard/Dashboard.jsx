@@ -17,11 +17,15 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
         billedImages: 0,
     });
 
+    const [billedTimeList, setBilledTimeList] = useState(null);
+
     useEffect(() => {
         const fetchCounts = async () => {
             try {
                 const formattedDate = DateFormatter(date);
                 const data = await entriesAPI.entriesStatus(formattedDate, userData);
+
+                setBilledTimeList(data?.billedTimeDTOList);
                 setImageCounts(data);
             } catch (err) {
                 console.error("Error fetching image counts:", err);
