@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { sweetShowMessage } from "../../../utils/ShowAlert";
 import { documentDTO } from "./../dto/DocumentDTO";
+import { MODE } from "../../../utils/Mode";
 
 const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
 
     const handleChangeMode = async (m) => {
         const backup_entry = localStorage.getItem("orig_entry");
 
-        if (mode === "Entry" && entry && backup_entry) {
+        if (mode === MODE.Entry && entry && backup_entry) {
             if (JSON.stringify(entry) === backup_entry) {
                 setMode(m);
                 setIsBrowse(true);

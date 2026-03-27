@@ -1,9 +1,9 @@
 import axios from "axios";
 import { API_ENV } from "../utils/API";
-import { DateFormatter } from "../utils/DateFormatter";
+import * as DateFormatter from "../utils/DateFormatter";
 
 export const entriesData = async ({ ids: ids, id: id, date: date }) => {
-    const formattedDate = DateFormatter(date);
+    const formattedDate = DateFormatter.inDashFormat(date);
 
     try {
         let response;
@@ -37,11 +37,13 @@ export const entriesData = async ({ ids: ids, id: id, date: date }) => {
 };
 
 export const entriesStatus = async (date) => {
+    const formattedDate = DateFormatter.inDashFormat(date);
+
     try {
         const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/entries-status`,
             {
                 params: {
-                    storedDate: date
+                    storedDate: formattedDate
                 },
                 headers: {
                     "Content-Type": "application/json"
@@ -71,12 +73,13 @@ export const entriesIds = async () => {
     }
 };
 
-export const saveEntry = async (entry, ids, updateTo) => {
+export const saveEntry = async (entry, production, ids, updateTo) => {
     try {
         const response = await axios.post(
             `${API_ENV.LOCAL_URL}/api/me/entries`,
             {
                 documentDTO: entry,
+                productionDTO: production,
                 ids: ids,
                 updateTo: updateTo
             },

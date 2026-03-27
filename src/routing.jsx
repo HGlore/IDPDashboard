@@ -2,7 +2,7 @@ import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { use, useEffect, useState } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
 import SideNavBar from './components/sidebar/SideBar';
-import Dashboard from './pages/dashboard/dashboard';
+import Dashboard from './pages/dashboard/Dashboard.jsx';
 import LoginPage from './pages/LoginPage';
 import LoadingModal from './components/LoadingModal';
 import DatePicker from './components/header/components/DatePicker';

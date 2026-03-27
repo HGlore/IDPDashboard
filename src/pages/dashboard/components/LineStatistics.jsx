@@ -20,36 +20,10 @@ const LineStatistics = ({ billedIntervalList }) => {
     );
 
     const lineData = formattedIntervals.map(i => {
-        return { time: i, billed: i === billedIntervalList?.time ? billedIntervalList?.billed : 0 }
+        const billedInterval = billedIntervalList?.find(b => b.time === i);
+
+        return { time: i, billed: billedInterval ? billedInterval.billed : 0 };
     })
-
-    /* const [lineData, setLineData] = useState([
-        { time: "12 AM", count: billed[0] || 0 },
-        { time: "1 AM", count: billed[1] || 0 },
-        { time: "2 AM", count: billed[2] || 0 },
-        { time: "3 AM", count: billed[3] || 0 },
-        { time: "4 AM", count: billed[4] || 0 },
-        { time: "5 AM", count: billed[5] || 0 },
-        { time: "6 AM", count: billed[6] || 0 },
-        { time: "7 AM", count: billed[7] || 0 },
-        { time: "8 AM", count: billed[8] || 0 },
-        { time: "9 AM", count: billed[9] || 0 },
-        { time: "10 AM", count: billed[10] || 0 },
-        { time: "11 AM", count: billed[11] || 0 },
-        { time: "12 PM", count: billed[12] || 0 },
-        { time: "1 PM", count: billed[13] || 0 },
-        { time: "2 PM", count: billed[14] || 0 },
-        { time: "3 PM", count: billed[15] || 0 },
-        { time: "4 PM", count: billed[16] || 0 },
-        { time: "5 PM", count: billed[17] || 0 },
-        { time: "6 PM", count: billed[18] || 0 },
-        { time: "7 PM", count: billed[19] || 0 },
-        { time: "8 PM", count: billed[20] || 0 },
-        { time: "9 PM", count: billed[21] || 0 },
-        { time: "10 PM", count: billed[22] || 0 },
-        { time: "11 PM", count: billed[23] || 0 },
-    ]); */
-
 
     return (
         <div className="bg-white shadow-[0_0_10px_rgba(0,0,0,0.4)] rounded-lg flex items-center justify-center pt-4 ml-3 h-full">

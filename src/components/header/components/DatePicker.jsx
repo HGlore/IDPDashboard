@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { DateFormatter } from "../../../utils/DateFormatter";
+import { inForwardSlashFormat } from "../../../utils/DateFormatter";
 
 const DatePicker = ({ date, setDate }) => {
     const inputRef = useRef(null);

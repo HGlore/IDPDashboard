@@ -10,11 +10,13 @@ import * as entriesAPI from './../../api/entriesAPI.js';
 import * as imageAPI from './../../api/imageAPI.js';
 import LoadingModal from "../../components/LoadingModal.jsx";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
-import { DateFormatter } from "../../utils/DateFormatter.js";
+import * as DateFormatter from "../../utils/DateFormatter.js";
 import { useNavigate } from "react-router-dom";
 import { documentDTO } from "./dto/DocumentDTO.jsx";
 import ModeManager from "./components/ModeManager.jsx";
 import { toastShowError, toastShowSuccess } from "../../utils/Toast.js";
+import { MODE } from "../../utils/Mode.js";
+import { productionDTO } from "./dto/ProductionDTO.jsx";
 
 const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const navigate = useNavigate();
@@ -23,17 +25,17 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     const [imageIndex, setImageIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [showItemList, setShowItemList] = useState(false);
+
     const [entry, setEntry] = useState(null);
     const [entryID, setEntryID] = useState(0);
+
+    const [production, setProduction] = useState(productionDTO({}));
+
     const [imageURL, setImageURL] = useState(null);
     const [loading, setLoading] = useState(false);
     const [mode, setMode] = useState("Entry");
     const [isBrowse, setIsBrowse] = useState(false);
     const [state, setState] = useState(0);
-
-    /* useEffect(() => {
-        fetchBatchIDs();
-    }, []); */
 
     useEffect(() => {
         fetchImage();
@@ -49,11 +51,12 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
         fetchImage();
         fetchBatchIDs();
 
-        const currentDate = localStorage.getItem("date");
-        const formattedDate = DateFormatter(currentDate);
-        const todayFormattedDate = DateFormatter(todaysDate);
+        const selectedDate = localStorage.getItem("date");
+        const formattedDate = DateFormatter.inForwardSlashFormat(selectedDate);
+        const todayFormattedDate = DateFormatter.inForwardSlashFormat(todaysDate);
+        const formatteOngoingDate = DateFormatter.inForwardSlashFormat(ongoingDate);
 
-        if (!canRequest && ongoingDate !== formattedDate && todayFormattedDate === formattedDate) {
+        if (!canRequest && formatteOngoingDate !== formattedDate && todayFormattedDate === formattedDate) {
             setLoading(true);
             navigate("/dashboard");
         }
@@ -72,33 +75,34 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             const responseIDs = await entriesAPI.entriesIds();
             localStorage.setItem("IDs", JSON.stringify(responseIDs));
 
-            const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date: date });
+            const responseEntry = await entriesAPI.entriesData({ ids: responseIDs, date });
 
             if (!responseEntry || responseEntry.length === 0) {
                 console.warn("No entries found");
                 setEntry(null);
                 setImageIndex(-1);
-                setMode("Browse");
+                setMode(MODE.Browse);
                 setIsBrowse(true);
                 return;
             }
 
-            const returned_entry = responseEntry[0];
+            const response = responseEntry[0];
 
-            if (!returned_entry) {
-                console.warn("First entry is undefined");
+            if (!response) {
+                console.warn("Entry is undefined");
                 return;
             }
 
-            setEntry(documentDTO(returned_entry));
-            setEntryID(returned_entry.id);
-            setMode("Entry");
+            setEntry(documentDTO(response));
+            setEntryID(response.id);
+            setMode(MODE.Entry);
             setIsBrowse(false);
+            localStorage.setItem("orig_entry", JSON.stringify(documentDTO(response)));
 
-            localStorage.setItem("orig_entry", JSON.stringify(documentDTO(returned_entry)));
+            fetchStartTimeNow();
 
             const storedIds = JSON.parse(localStorage.getItem("IDs"));
-            const index = storedIds.findIndex((id) => Number(id) === returned_entry?.id);
+            const index = storedIds.findIndex((id) => Number(id) === response?.id);
             setImageIndex(index);
             setLoading(false);
 
@@ -106,6 +110,16 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
             console.warn("Error fetching IDs:", error);
         }
     };
+
+    const fetchStartTimeNow = () => {
+        const now = new Date().toLocaleString();
+        localStorage.setItem("start_time", now);
+        setProduction(prev => ({
+            ...prev,
+            productionDate: ongoingDate || todaysDate,
+            startTime: now
+        }));
+    }
 
     const fetchImage = async () => {
         if (!entry?.imageName) {
@@ -128,9 +142,14 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
 
     const fetchEntryByID = async () => {
         if (!entryID || entryID === entry?.id) return;
+
         const response = await entriesAPI.entriesData({ id: entryID, date });
+
+        
+
         setEntry(documentDTO(response));
         localStorage.setItem("orig_entry", JSON.stringify(documentDTO(response)));
+        fetchStartTimeNow();
         setLoading(false);
     };
 
@@ -223,12 +242,18 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
 
             const items_without_keys = entry.items.map(({ key_id, ...rest }) => rest);
 
-            const payload = {
+            const entryPayload = {
                 ...entry,
                 items: items_without_keys
             }
 
-            const response = await entriesAPI.saveEntry(payload, ids, updateTo);
+            const now = new Date().toLocaleString();
+            const prodPayload = {
+                ...production,
+                endTime: now
+            }
+
+            const response = await entriesAPI.saveEntry(entryPayload, prodPayload, ids, updateTo);
 
             if (response.success) {
                 toastShowSuccess("Saved Successfully");

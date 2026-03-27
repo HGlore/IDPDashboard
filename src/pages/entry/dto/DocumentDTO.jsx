@@ -77,12 +77,13 @@ export const documentDTO = (document) => {
         },
 
         items: document.items?.map(item => ({
-            id: item.id,
-            archive: item.archive,
+            keyId: item.keyId ?? Date.now(),
+            id: item.id ?? 0,
+            archive: item.archive ?? 0,
             clss: item.clss,
             description: item.description,
             dimension: item.dimension,
-            documentTableID: item.documentTableID,
+            documentTableID: item.documentTableID ?? 0,
             handlingUnit: item.handlingUnit,
             nmfc: item.nmfc,
             packageType: item.packageType,

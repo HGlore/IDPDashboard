@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MdAddPhotoAlternate, MdAssignmentTurnedIn, MdOutlineImage } from "react-icons/md";
 import TopCard from "./components/TopCard";
-import { DateFormatter } from "../../utils/DateFormatter.js";
+import * as DateFormatter from "../../utils/DateFormatter.js";
 import LineStatistics from "./components/LineStatistics";
 import PieStatistics from "./components/PieStatistics";
 import HelloCard from "./components/HelloCard";
 import * as imageAPI from "../../api/imageAPI.js";
 import * as entriesAPI from "../../api/entriesAPI.js";
 import { sweetShowMessage } from "../../utils/ShowAlert.js";
+import { billedTimeDTO } from "../entry/dto/BilledTimeDTO.jsx";
 
 const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
     const [imageCounts, setImageCounts] = useState({
-        totalQueue: 0,
+        unbilledImages: 0,
         newImages: 0,
         billedImages: 0,
     });
@@ -22,8 +23,7 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
     useEffect(() => {
         const fetchCounts = async () => {
             try {
-                const formattedDate = DateFormatter(date);
-                const data = await entriesAPI.entriesStatus(formattedDate, userData);
+                const data = await entriesAPI.entriesStatus(date, userData);
 
                 setBilledTimeList(data?.billedTimeDTOList);
                 setImageCounts(data);
@@ -33,12 +33,12 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
         };
 
         if (ongoingDate) {
-            const currentDate = localStorage.getItem("date");
-            const formattedDate = DateFormatter(currentDate);
-            const todayFormattedDate = DateFormatter(todaysDate);
+            const selectedDate = localStorage.getItem("date");
+            const formattedSelectedDate = DateFormatter.inForwardSlashFormat(selectedDate);
+            const todayFormattedDate = DateFormatter.inForwardSlashFormat(todaysDate);
 
             if (!canRequest && userData.role !== "Administrator"
-                && ongoingDate !== formattedDate && todayFormattedDate === formattedDate) {
+                && ongoingDate !== formattedSelectedDate && todayFormattedDate === formattedSelectedDate) {
                 sweetShowMessage(
                     "warning",
                     "!Unfinished Entries!",
@@ -68,13 +68,13 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 p-2">
                             <TopCard icon={MdAddPhotoAlternate} value={imageCounts.newImages} name="New Image(s)" />
-                            <TopCard icon={MdOutlineImage} value={imageCounts.totalQueue} name="Total Queue" />
+                            <TopCard icon={MdOutlineImage} value={imageCounts.unbilledImages} name="Unbilled Image(s)" />
                             <TopCard icon={MdAssignmentTurnedIn} value={imageCounts.billedImages}
                                 name="Billed Image(s)" />
                         </div>
 
                         <div className="w-full">
-                            <LineStatistics />
+                            <LineStatistics billedIntervalList={billedTimeList} />
                         </div>
                     </div>
 
@@ -83,7 +83,7 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
                         <HelloCard />
                         <PieStatistics
                             inserted={imageCounts.newImages}
-                            queue={imageCounts.totalQueue}
+                            queue={imageCounts.unbilledImages}
                             entered={imageCounts.billedImages}
                         />
                     </div>

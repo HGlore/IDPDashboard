@@ -9,7 +9,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
     const [modalMode, setModalMode] = useState("add");
     const [selectedItem, setSelectedItem] = useState(null);
 
-    const handleRemove = async (id) => {
+    const handleRemove = async (keyId) => {
         const result = await sweetShowMessage("warning", "Remove Item:",
             "Are you sure you want to remove this item?", "Remove", "Cancel");
 
@@ -17,8 +17,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
             /* setItems(items.filter((item) => item.id !== id)); */
             setEntry(prev => ({
                 ...prev,
-                items: prev.items.filter(item => (item.id && item.id !== id)
-                    || item.key_id && item.key_id !== id)
+                items: prev.items.filter(item => item.keyId && item.keyId !== keyId)
             }));
         }
     };
@@ -58,10 +57,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                 ...prev.items,
                 {
                     ...newItemData,
-                    key_id: Date.now(),
-                    id: 0,
-                    archive: 0,
-                    documentTableID: 0,
+                    keyId: Date.now(),
                 }
             ]
         }));
@@ -71,8 +67,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
         setEntry(prev => ({
             ...prev,
             items: prev.items.map(item =>
-                (item.id && item.id === editedItem.id)
-                    || (item.key_id && item.key_id === editedItem.key_id)
+                (item.keyId && item.keyId === editedItem.keyId)
                     ? { ...item, ...editedItem }
                     : item
             )
@@ -145,7 +140,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                     <tbody>
                         {itemList.map((item, index) => (
                             <tr
-                                key={item.id}
+                                key={item.keyId}
                                 className="group border-b last:border-none hover:bg-blue-50/40 transition-all duration-300"
                             >
                                 <td className="px-4 py-2 align-middle">
@@ -203,7 +198,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
 
                                         <button
                                             disabled={isBrowse}
-                                            onClick={() => handleRemove(item.id || item.key_id)}
+                                            onClick={() => handleRemove(item.keyId)}
                                             className="p-2 rounded-lg hover:bg-red-100 text-red-500 hover:scale-110 transition-all"
                                         >
                                             <FiTrash2 />
