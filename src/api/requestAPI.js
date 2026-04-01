@@ -1,31 +1,23 @@
-import axios from "axios";
 import { API_ENV } from "../utils/API";
+import api from "./api";
 
 export const assignEntries = async () => {
     try {
-        const response = await axios.post(`${API_ENV.LOCAL_URL}/api/me/assignments`,
-            {
-                withCredentials: true
-            }
-        );
+        const response = await api.post(`api/me/assignments`).json();
 
-        return response.data;
+        return response;
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.message);
+        throw new Error(error.response?.message || error.message);
     }
 };
 
 export const ongoingEntries = async () => {
     try {
-        const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/ongoing`,
-            {
-                withCredentials: true
-            }
-        );
+        const response = await api.get(`api/me/ongoing`).json();
 
-        return response.data;
+        return response;
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.message);
+        throw new Error(error.response?.message || error.message);
 
     }
 };

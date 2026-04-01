@@ -1,6 +1,6 @@
-import axios from "axios";
 import { API_ENV } from "../utils/API";
 import * as DateFormatter from "../utils/DateFormatter";
+import api from "./api";
 
 export const entriesData = async ({ ids: ids, id: id, date: date }) => {
     const formattedDate = DateFormatter.inDashFormat(date);
@@ -9,30 +9,30 @@ export const entriesData = async ({ ids: ids, id: id, date: date }) => {
         let response;
 
         if (id != null) {
-            response = await axios.get(
-                `${API_ENV.LOCAL_URL}/api/me/entries/${id}`,
+            response = await api.get(
+                `api/me/entries/${id}`,
                 {
-                    params: {
+                    searchParams: {
                         date: formattedDate
-                    },
-                    withCredentials: true
+                    }
                 }
-            );
+            ).json();
 
         } else {
-            response = await axios.post(
-                `${API_ENV.LOCAL_URL}/api/me/entries/batch`,
+            response = await api.post(
+                `api/me/entries/batch`,
                 {
-                    ids: ids,
-                    date: formattedDate
-                },
-                { withCredentials: true }
-            );
+                    json: {
+                        ids: ids,
+                        date: formattedDate
+                    }
+                }
+            ).json();
         }
 
-        return response.data;
+        return response;
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.message);
+        throw new Error(error.response?.message || error.message);
     }
 };
 
@@ -40,19 +40,15 @@ export const entriesStatus = async (date) => {
     const formattedDate = DateFormatter.inDashFormat(date);
 
     try {
-        const response = await axios.get(`${API_ENV.LOCAL_URL}/api/me/entries-status`,
+        const response = await api.get(`api/me/entries-status`,
             {
-                params: {
+                searchParams: {
                     storedDate: formattedDate
-                },
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                withCredentials: true,
+                }
             }
-        );
+        ).json();
 
-        return response.data;
+        return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || error.message);
     }
@@ -60,14 +56,9 @@ export const entriesStatus = async (date) => {
 
 export const entriesIds = async () => {
     try {
-        const response = await axios.get(
-            `${API_ENV.LOCAL_URL}/api/me/ids-entries`,
-            {
-                withCredentials: true
-            }
-        );
+        const response = await api.get(`api/me/ids-entries`).json();
 
-        return response.data;
+        return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || error.message);
     }
@@ -75,18 +66,16 @@ export const entriesIds = async () => {
 
 export const saveEntry = async (entry, production, ids, updateTo) => {
     try {
-        const response = await axios.post(
-            `${API_ENV.LOCAL_URL}/api/me/entries`,
+        await api.post(`api/me/entries`,
             {
-                documentDTO: entry,
-                productionDTO: production,
-                ids: ids,
-                updateTo: updateTo
-            },
-            {
-                withCredentials: true
+                json: {
+                    documentDTO: entry,
+                    productionDTO: production,
+                    ids: ids,
+                    updateTo: updateTo
+                }
             }
-        );
+        ).json();
 
         if (updateTo == "BILLED") { window.location.reload(); }
 

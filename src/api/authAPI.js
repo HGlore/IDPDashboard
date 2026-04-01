@@ -1,18 +1,13 @@
-import axios from "axios";
 import { API_ENV } from "../utils/API";
+import api from "./api";
 
 export const checkAuth = async () => {
     try {
-        const res = await axios.get(
-            `${API_ENV.LOCAL_URL}/api/me`,
-            {
-                withCredentials: true
-            }
-        );
+        const res = await api.get(`api/me`).json();
 
-        if (res.data.status === "401") return { loggedIn: false };
+        if (res.status === "401") return { loggedIn: false };
 
-        return { loggedIn: true, user: res.data };
+        return { loggedIn: true, user: res };
     } catch (err) {
         return { loggedIn: false };
     }
@@ -20,31 +15,29 @@ export const checkAuth = async () => {
 
 export const Login = async (companyID, password) => {
     try {
-        const response = await axios.post(
-            `${API_ENV.LOCAL_URL}/api/login`,
-            { companyID, password },
+        const response = await api.post(`api/login`,
             {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
+                json: { companyID, password },
             }
-        );
-        return response.data;
+        ).json();
+        return response;
     } catch (error) {
-        if (error.response) throw error.response.data;
-        else if (error.request) throw "No response from server.";
-        else throw error.message;
+        if (error.name === 'HTTPError') {
+            const errData = await error.response.json().catch(() => null);
+            throw errData || { message: 'Server returned an error.' }
+        } else {
+            throw { message: error.message || 'Unknown error' }
+        }
     }
 };
 
 export const Logout = async () => {
     try {
-        const response = await axios.post(
-            `${API_ENV.LOCAL_URL}/api/user-out`,
-            { withCredentials: true }
-        );
-        return response.data; // "Logged out successfully"
+        await api.post(`api/user-out`).text();
+
+        return { success: true }; // "Logged out successfully"
     } catch (error) {
-        if (error.response) throw error.response.data;
+        if (error.response) throw error.response;
         else if (error.request) throw "No response from server.";
         else throw error.message;
     }

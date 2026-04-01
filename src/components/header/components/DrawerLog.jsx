@@ -5,8 +5,10 @@ import * as authApi from "../../../api/authAPI"
 const DrawerLog = () => {
     const handleLogout = async () => {
         try {
-            await authApi.Logout();
-            window.location.reload();
+            const res = await authApi.Logout();
+            if (res.success) {
+                window.location.reload();
+            }
         } catch (err) {
             console.error("Logout error:", err);
             alert("Logout failed!");

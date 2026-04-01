@@ -208,7 +208,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </table>    
             </div>
 
             {/* Footer Info */}
