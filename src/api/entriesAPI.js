@@ -75,7 +75,7 @@ export const saveEntry = async (entry, production, ids, updateTo) => {
                     updateTo: updateTo
                 }
             }
-        ).json();
+        ).text();
 
         if (updateTo == "BILLED") { window.location.reload(); }
 
