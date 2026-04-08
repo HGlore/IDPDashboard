@@ -14,6 +14,7 @@ import { Duration } from "./utils/Duration.js";
 import { Toaster } from "./utils/Toast.js";
 import { API_ENV } from './utils/API.js';
 import * as requestAPI from './api/requestAPI.js'
+import Monitoring from './pages/monitoring/Monitoring.jsx';
 
 const Routing = () => {
     const today = new Date().toISOString().split("T")[0];
@@ -28,7 +29,6 @@ const Routing = () => {
     const [dashboardData, setDashboardData] = useState(null);
 
     localStorage.setItem("date", date);
-
 
     {/* useEffect(() => {
        CheckAuth().then(({ loggedIn }) => {
@@ -102,6 +102,7 @@ const Routing = () => {
                         <Route path='/entry' element={<EntryPage canRequest={canRequest} date={date} ongoingDate={ongoingDate} todaysDate={today} />} />
                     </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} />} />
+                        <Route path='/monitoring' element={<Monitoring date={date} />} />
                         <Route path='/entry' />
                     </Route>)}
             </Route>
