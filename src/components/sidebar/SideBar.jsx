@@ -54,7 +54,7 @@ const SideNavBar = ({ userData, date, setDate }) => {
                     </div>
 
                     {/* Data Analytics */}
-                    <div className='rounded-xl p-0.5'>
+                    <div className='rounded-xl p-0.5 hidden'>
                         <NavLink to="/analytics"
                             className={({ isActive }) =>
                                 `group flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 rounded-lg

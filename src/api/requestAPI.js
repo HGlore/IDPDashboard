@@ -4,7 +4,6 @@ import api from "./api";
 export const assignEntries = async () => {
     try {
         const response = await api.post(`api/me/assignments`).json();
-
         return response;
     } catch (error) {
         throw new Error(error.response?.message || error.message);

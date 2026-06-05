@@ -3,6 +3,7 @@ import { MdCircle, MdKeyboardArrowDown, MdKeyboardArrowRight, MdViewList } from 
 import FilterDrawer from './FilterDrawer'
 
 const MonitoringHeader = () => {
+    const [showFilterDrawer, setShowFilterDrawer] = useState(false);
     const [filterStatus, setFilterStatus] = useState("All");
 
     const getIcon = () => {
@@ -28,17 +29,25 @@ const MonitoringHeader = () => {
                 <div className='relative'>
                     <div className='flex'>
                         <button
+                            onClick={() => setShowFilterDrawer(!showFilterDrawer)}
                             className='flex border-2 pl-1 pr-1 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer items-center justify-center'>
                             {getIcon()}
                             <span className='pl-1'>{filterStatus}</span>
-                            {<MdKeyboardArrowRight className='ml-5' />}
+                            {showFilterDrawer ? <MdKeyboardArrowDown className='ml-5' /> : <MdKeyboardArrowRight className='ml-5' />}
                         </button>
-                        <p className='pl-1 text-sm font-semibold text-gray-400'>
+                        <p className='pl-1 mt-1 w-full text-sm font-semibold text-gray-400'>
+                            Filter to show
+                        </p>
+                        <p className='pr-1 mt-1 w-full text-right text-sm font-semibold text-gray-400 right-0'>
                             Showing 105 of 300 billers
                         </p>
                     </div>
-                    <div>
-                        <FilterDrawer setFilterStatus={setFilterStatus} />
+                    <div
+                        className={`transition-all duration-300 ease-in-out ${showFilterDrawer ? `opacity-100` : `opacity-0`}`}
+                    >
+                        <FilterDrawer
+                            setFilterStatus={setFilterStatus}
+                            setShowFilter={setShowFilterDrawer} />
                     </div>
                 </div>
             </div>

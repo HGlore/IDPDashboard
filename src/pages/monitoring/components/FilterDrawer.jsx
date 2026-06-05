@@ -1,13 +1,18 @@
 import React from 'react'
 import { MdCircle, MdViewList } from 'react-icons/md'
 
-const FilterDrawer = ({ setFilterStatus }) => {
+const FilterDrawer = ({ setFilterStatus, setShowFilter }) => {
+
+    const setStatus = (status) => {
+        setFilterStatus(status);
+        setShowFilter(false);
+    }
 
     return (
         <div className='absolute w-23 bg-white shadow-lg rounded-lg border-2 border-gray-200 z-100'>
             <div>
                 <button
-                    onClick={() => setFilterStatus("All")}
+                    onClick={() => setStatus("All")}
                     className='flex text-left hover:bg-slate-200 w-full pl-1 rounded-lg items-center'>
                     <MdViewList className='text-blue-800' />
                     <span className='pl-1'>All</span>
@@ -15,7 +20,7 @@ const FilterDrawer = ({ setFilterStatus }) => {
             </div>
             <div>
                 <button
-                    onClick={() => setFilterStatus("Online")}
+                    onClick={() => setStatus("Online")}
                     className='flex text-left hover:bg-slate-200 w-full pl-1 rounded-lg items-center'>
                     <MdCircle className='text-green-700' />
                     <span className='pl-1'>Online</span>
@@ -23,7 +28,7 @@ const FilterDrawer = ({ setFilterStatus }) => {
             </div>
             <div>
                 <button
-                    onClick={() => setFilterStatus("Offline")}
+                    onClick={() => setStatus("Offline")}
                     className='flex text-left hover:bg-slate-200 w-full pl-1 rounded-lg items-center'>
                     <MdCircle className='text-red-700' />
                     <span className='pl-1'>Offline</span>
@@ -31,7 +36,7 @@ const FilterDrawer = ({ setFilterStatus }) => {
             </div>
             <div>
                 <button
-                    onClick={() => setFilterStatus("Break")}
+                    onClick={() => setStatus("Break")}
                     className='flex text-left hover:bg-slate-200 w-full pl-1 rounded-lg items-center'>
                     <MdCircle className='text-amber-500' />
                     <span className='pl-1'>Break</span>

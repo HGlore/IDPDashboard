@@ -145,7 +145,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
 
         const response = await entriesAPI.entriesData({ id: entryID, date });
 
-        
+
 
         setEntry(documentDTO(response));
         localStorage.setItem("orig_entry", JSON.stringify(documentDTO(response)));
@@ -154,7 +154,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     };
 
     const setIndexToNext = () => {
-        const ids = JSON.parse(localStorage.getItem("IDs")) || [];
+        const ids = JSON.parse(localStorage.getItem("IDs")) || "[]";
         if (imageIndex >= ids.length - 1) return;
 
         const newIndex = imageIndex + 1;
@@ -165,7 +165,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
     };
 
     const setIndexToPrev = () => {
-        const ids = JSON.parse(localStorage.getItem("IDs")) || [];
+        const ids = JSON.parse(localStorage.getItem("IDs")) || "[]";
         if (imageIndex <= 0) return;
 
         const prevIndex = imageIndex - 1;
@@ -301,7 +301,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                 instructions={entry?.instructions}
                 totals={entry?.totals}
                 index={imageIndex}
-                itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
+                itemLength={JSON.parse(localStorage.getItem("IDs") || "[]").length}
                 setEntry={setEntry}
                 isBrowse={isBrowse}
             />
@@ -355,7 +355,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
                         >
                             {/* Left Panel */}
                             <div className="w-1/2 rounded-2xl border border-gray-200 shadow-inner">
-                                <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs") || []).length}
+                                <ImageViewer src={imageURL} alt={"Image Viewer"} index={imageIndex} itemLength={JSON.parse(localStorage.getItem("IDs") || "[]").length}
                                     onPrev={setIndexToPrev} onNext={setIndexToNext} isBrowse={isBrowse} />
                             </div>
 

@@ -10,8 +10,14 @@ const RequestForEntry = ({ setCanRequest: canRequest }) => {
 
         if (result.isConfirmed) {
             try {
-                await requestAPI.assignEntries();
-                window.location.reload();
+                const res = await requestAPI.assignEntries();
+                console.log(res);
+                if (res.imageCount > 0) {
+                    window.location.reload();
+                } else {
+                    await sweetShowMessage("info", "No Images!",
+                        "No available images to request!", "Ok", "-----");
+                }
 
             } catch (error) {
                 throw new Error(error.requestAPI?.data?.message || error.message);
