@@ -43,7 +43,7 @@ const MonitoringHeader = () => {
                         </p>
                     </div>
                     <div
-                        className={`transition-all duration-300 ease-in-out ${showFilterDrawer ? `opacity-100` : `opacity-0`}`}
+                        className={`transition-all duration-300 ease-in-out ${showFilterDrawer ? `opacity-100 pointer-events-auto` : `opacity-0 pointer-events-none`}`}
                     >
                         <FilterDrawer
                             setFilterStatus={setFilterStatus}

@@ -1,5 +1,6 @@
 import React from 'react'
-import MonitoringHeader from './components/MonitoringHeader'
+import MonitoringHeader from './components/header/MonitoringHeader'
+import BillerListView from './components/BillerListView'
 
 const Monitoring = ({ date }) => {
   return (
@@ -7,8 +8,9 @@ const Monitoring = ({ date }) => {
       <div className='flex'>
         <MonitoringHeader />
       </div>
-      <div>Monitoring  </div>
-      <p>Date: {date}</p>
+      <div>
+        <BillerListView />
+      </div>
     </div>
   )
 }
