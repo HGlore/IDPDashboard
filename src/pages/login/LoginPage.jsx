@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { toastShowError, toastShowSuccess } from "../utils/Toast.js";
+import { toastShowError, toastShowSuccess } from "../../utils/Toast.js";
 import { Database } from "lucide-react";
-import * as authAPI from "../api/authAPI.js";
-import * as imageAPI from "../api/imageAPI.js";
+import * as authAPI from "../../api/authAPI.js";
+import * as imageAPI from "../../api/imageAPI.js";
 
 const LoginPage = ({ setUserData, setLoggedIn }) => {
     const navigate = useNavigate();
@@ -30,12 +30,12 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
                     toastShowSuccess("Logged In!.");
                     navigate("/dashboard");
                 } else {
-                    toastShowError("Login failed: Something Went Wrong!");
+                    toastShowError("Something Went Wrong!");
                 }
             });
 
         } catch (err) {
-            toastShowError("Login failed: User not found!");
+            toastShowError("User not found!");
         } finally {
             setLoading(false);
         }
@@ -155,11 +155,22 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
                 </motion.div>
 
                 {/* Footer */}
+                <motion.div className="text-center items-center mt-1">
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.80 }}
+                        onClick={() => navigate("/register")}
+                        className="font-extralight cursor-pointer text-sm text-cyan-600"
+                    >
+                        Sign Up
+                    </motion.button>
+                </motion.div>
+
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="mt-5 text-center text-xs text-gray-400"
+                    className="mt-4 text-center text-xs text-gray-400"
                 >
                     Secure access to your system
                 </motion.p>

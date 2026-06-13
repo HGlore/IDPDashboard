@@ -6,14 +6,32 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import DrawerLog from './DrawerLog';
+import { useRef } from 'react';
 
 const Profile = ({ userData }) => {
     const [image, setImage] = useState(null);
     const [isOpenLog, setIsOpenLog] = useState(false);
+    const drawerRef = useRef(null);
 
     const toggleDrawer = () => {
         setIsOpenLog(!isOpenLog);
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (drawerRef.current &&
+                !drawerRef.current.contains(event.target)
+            ) {
+                setIsOpenLog(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         try {
@@ -42,7 +60,7 @@ const Profile = ({ userData }) => {
                 {userData.role}
             </p>
         </div>
-        <div className='relative'>
+        <div ref={drawerRef} className='relative'>
             <button
                 onClick={toggleDrawer}
                 className="text-slate-700 p-1.5 hover:text-slate-400 cursor-pointer flex items-center"
@@ -52,7 +70,8 @@ const Profile = ({ userData }) => {
 
             <div
                 className={`
-                            overflow-hidden transition-all duration-300 ease-in-out
+                            absolute top-full right-0 z-50 
+                            transition-all duration-300 ease-in-out
                             ${isOpenLog ? "max-h-96 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}
                           `}
             >

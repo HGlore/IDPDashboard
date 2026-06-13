@@ -84,3 +84,21 @@ export const saveEntry = async (entry, production, ids, updateTo) => {
         throw new Error(error.response?.data?.message || error.message);
     }
 };
+
+export const getUserProdStatus = async (status, date) => {
+    try {
+        const resJson = await api.get(
+            `api/me/production/${status}`,
+            {
+                searchParams: {
+                    date: date
+                }
+            }
+        ).json();
+
+        return resJson;
+
+    } catch (error) {
+        throw new Error(error.response?.data?.message || error.message);
+    }
+}

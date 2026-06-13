@@ -13,6 +13,28 @@ export const checkAuth = async () => {
     }
 };
 
+export const Register = async (companyID, password, role, regKey) => {
+    try {
+        const response = await api.post(`api/register`,
+            {
+                json: {
+                    companyID, password, role, regKey
+                },
+            }
+        ).json();
+
+        return response;
+
+    } catch (error) {
+        if (error.name === 'HTTPError') {
+            const errData = await error.response.json().catch(() => null);
+            throw errData || { message: 'Server returned an error.' }
+        } else {
+            throw { message: error.message || 'Unknown error' }
+        }
+    }
+};
+
 export const Login = async (companyID, password) => {
     try {
         const response = await api.post(`api/login`,

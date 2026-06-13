@@ -3,7 +3,7 @@ import { use, useEffect, useState } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
 import SideNavBar from './components/sidebar/SideBar';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/login/LoginPage.jsx';
 import LoadingModal from './components/LoadingModal';
 import DatePicker from './components/header/components/DatePicker';
 import EntrySideNavBar from './components/sidebar/components/entry/EntrySideBar';
@@ -15,6 +15,7 @@ import { Toaster } from "./utils/Toast.js";
 import { API_ENV } from './utils/API.js';
 import * as requestAPI from './api/requestAPI.js'
 import Monitoring from './pages/monitoring/Monitoring.jsx';
+import RegistryPage from './pages/registry/RegistryPage.jsx';
 
 const Routing = () => {
     const today = new Date().toISOString().split("T")[0];
@@ -95,6 +96,7 @@ const Routing = () => {
         <Routes>
             <Route path="/" element={loggedIn ? (<Navigate to="/dashboard" replace />) : (
                 <LoginPage setUserData={setUserData} setLoggedIn={setLoggedin} />)} />
+            <Route path="/register" element={<RegistryPage />} />
             <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
                 {userData?.role === "Entry" ? (
                     <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} />}>

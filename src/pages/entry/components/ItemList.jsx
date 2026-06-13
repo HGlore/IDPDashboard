@@ -115,7 +115,8 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
 
                     {/* Header */}
                     <thead
-                        className="bg-gradient-to-r from-slate-100 to-slate-200 text-slate-600 uppercase text-xs tracking-wider">
+                        className="bg-gradient-to-r from-slate-100 to-slate-200 text-slate-600 uppercase text-xs tracking-wider"
+                    >
                         <tr>
                             {[
                                 "Item",
@@ -208,7 +209,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                             </tr>
                         ))}
                     </tbody>
-                </table>    
+                </table>
             </div>
 
             {/* Footer Info */}
