@@ -28,7 +28,11 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
             if (response?.success) {
                 toastShowSuccess("Registered Successfully!");
                 navigate("/")
-            } else {
+            }
+            else if (response?.status === 409) {
+                toastShowError("User Already Exist!");
+            }
+            else {
                 toastShowError("Register failed!");
             }
 

@@ -289,7 +289,7 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
         { id: 2, component: entry && <PartyFields titleName="Consignee" fieldsData={entry?.consignee} setEntry={setEntry} parentKey={"consignee"} isBrowse={isBrowse} /> },
         { id: 3, component: entry && <PartyFields titleName="Bill-To" fieldsData={entry?.billTo} setEntry={setEntry} parentKey={"billTo"} isBrowse={isBrowse} /> },
     ];
-
+    
     return (
         <div className="p-5 min-h-screen bg-gray-50 flex flex-col gap-2">
             {/* MODE */}

@@ -30,7 +30,7 @@ const Monitoring = ({ date }) => {
       </div>
 
       <div className='flex-1 overflow-y-auto'>
-        <BillerListView prodList={prodStatusList} />
+        <BillerListView filteredStatus={filteredStatus} prodList={prodStatusList} />
       </div>
     </div>
   )
