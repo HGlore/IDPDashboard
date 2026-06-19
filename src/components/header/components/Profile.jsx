@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import DrawerLog from './DrawerLog';
 import { useRef } from 'react';
 
-const Profile = ({ userData }) => {
+const Profile = ({ userData, setLoggedIn }) => {
     const [image, setImage] = useState(null);
     const [isOpenLog, setIsOpenLog] = useState(false);
     const drawerRef = useRef(null);
@@ -38,11 +38,14 @@ const Profile = ({ userData }) => {
             imageAPI.getProfileImage().then(res => {
                 if (res.success) {
                     setImage(res.imageUrl);
+                } else {
+                    setLoggedIn(false);
                 }
             });
 
         } catch (error) {
-            console.log(error);
+            setLoggedIn(false);
+            console.warn(error);
         }
     }, []);
 

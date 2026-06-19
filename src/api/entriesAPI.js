@@ -1,6 +1,6 @@
 import { API_ENV } from "../utils/API";
 import * as DateFormatter from "../utils/DateFormatter";
-import api from "./api";
+import * as api from "./api";
 
 export const entriesData = async ({ ids: ids, id: id, date: date }) => {
     const formattedDate = DateFormatter.inDashFormat(date);
@@ -9,7 +9,7 @@ export const entriesData = async ({ ids: ids, id: id, date: date }) => {
         let response;
 
         if (id != null) {
-            response = await api.get(
+            response = await api.jsonAPI.get(
                 `api/me/entries/${id}`,
                 {
                     searchParams: {
@@ -19,7 +19,7 @@ export const entriesData = async ({ ids: ids, id: id, date: date }) => {
             ).json();
 
         } else {
-            response = await api.post(
+            response = await api.jsonAPI.post(
                 `api/me/entries/batch`,
                 {
                     json: {
@@ -40,7 +40,7 @@ export const entriesStatus = async (date) => {
     const formattedDate = DateFormatter.inDashFormat(date);
 
     try {
-        const response = await api.get(`api/me/entries-status`,
+        const response = await api.jsonAPI.get(`api/me/entries-status`,
             {
                 searchParams: {
                     storedDate: formattedDate
@@ -56,7 +56,7 @@ export const entriesStatus = async (date) => {
 
 export const entriesIds = async () => {
     try {
-        const response = await api.get(`api/me/ids-entries`).json();
+        const response = await api.jsonAPI.get(`api/me/ids-entries`).json();
 
         return response;
     } catch (error) {
@@ -66,7 +66,7 @@ export const entriesIds = async () => {
 
 export const saveEntry = async (entry, production, ids, updateTo) => {
     try {
-        await api.post(`api/me/entries`,
+        await api.jsonAPI.post(`api/me/entries`,
             {
                 json: {
                     documentDTO: entry,
@@ -87,7 +87,7 @@ export const saveEntry = async (entry, production, ids, updateTo) => {
 
 export const getUserProdStatus = async (status, date) => {
     try {
-        const resJson = await api.get(
+        const resJson = await api.jsonAPI.get(
             `api/me/production/${status}`,
             {
                 searchParams: {

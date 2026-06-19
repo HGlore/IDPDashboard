@@ -1,9 +1,9 @@
 import { API_ENV } from "../utils/API";
-import api from "./api";
+import * as api from "./api";
 
 export const checkAuth = async () => {
     try {
-        const res = await api.get(`api/me`).json();
+        const res = await api.jsonAPI.get(`api/me`).json();
 
         if (res.status === "401") return { loggedIn: false };
 
@@ -13,13 +13,20 @@ export const checkAuth = async () => {
     }
 };
 
-export const Register = async (companyID, password, role, regKey) => {
+export const Register = async (fullName, companyID, password, role, regKey, pickedProfile) => {
+    const formData = new FormData();
+
+    formData.append("fullName", fullName);
+    formData.append("companyID", companyID);
+    formData.append("password", password);
+    formData.append("role", role);
+    formData.append("regKey", regKey);
+    formData.append("profileImage", pickedProfile);
+
     try {
-        const response = await api.post(`api/register`,
+        const response = await api.noContentAPI.post(`api/register`,
             {
-                json: {
-                    companyID, password, role, regKey
-                },
+                body: formData
             }
         ).json();
 
@@ -37,7 +44,7 @@ export const Register = async (companyID, password, role, regKey) => {
 
 export const Login = async (companyID, password) => {
     try {
-        const response = await api.post(`api/login`,
+        const response = await api.jsonAPI.post(`api/login`,
             {
                 json: { companyID, password },
             }
@@ -55,7 +62,7 @@ export const Login = async (companyID, password) => {
 
 export const Logout = async () => {
     try {
-        await api.post(`api/user-out`).text();
+        await api.jsonAPI.post(`api/user-out`).text();
 
         return { success: true }; // "Logged out successfully"
     } catch (error) {

@@ -99,10 +99,10 @@ const Routing = () => {
             <Route path="/register" element={<RegistryPage />} />
             <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
                 {userData?.role === "Entry" ? (
-                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} />}>
+                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} setLoggedIn={setLoggedin} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} ongoingDate={ongoingDate} todaysDate={today} />} />
                         <Route path='/entry' element={<EntryPage canRequest={canRequest} date={date} ongoingDate={ongoingDate} todaysDate={today} />} />
-                    </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} />}>
+                    </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} setLoggedIn={setLoggedin} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} />} />
                         <Route path='/monitoring' element={<Monitoring date={date} />} />
                         <Route path='/entry' />

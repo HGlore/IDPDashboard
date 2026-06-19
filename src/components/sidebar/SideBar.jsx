@@ -7,7 +7,7 @@ import {
 } from "react-icons/md";
 import Header from '../header/Header';
 
-const SideNavBar = ({ userData, date, setDate }) => {
+const SideNavBar = ({ userData, date, setDate, setLoggedIn }) => {
 
     const activeClass = "bg-slate-700 font-bold";
 
@@ -70,7 +70,7 @@ const SideNavBar = ({ userData, date, setDate }) => {
             {/* Header */}
             <div className='flex-1 flex flex-col'>
                 <div className='m-1 rounded-sm'>
-                    <Header userData={userData} date={date} setDate={setDate} />
+                    <Header userData={userData} date={date} setDate={setDate} setLoggedIn={setLoggedIn} />
                 </div>
 
                 <main className="flex-1 p-1">

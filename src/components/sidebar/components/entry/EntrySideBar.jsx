@@ -5,7 +5,7 @@ import {
 } from "react-icons/md";
 import Header from '../../../header/Header';
 
-const EntrySideNavBar = ({userData, date, setDate, canRequest}) => {
+const EntrySideNavBar = ({userData, date, setDate, canRequest, setLoggedIn}) => {
     const activeClass = "bg-slate-700 font-bold";
 
     return (<div className="flex min-h-screen">
@@ -61,7 +61,7 @@ const EntrySideNavBar = ({userData, date, setDate, canRequest}) => {
 
                 {/* Header */}
                 <div className='m-1 rounded-sm'>
-                    <Header userData={userData} date={date} setDate={setDate} canRequest={canRequest} />
+                    <Header userData={userData} date={date} setDate={setDate} canRequest={canRequest} setLoggedIn={setLoggedIn} />
                 </div>
 
                 {/* Page Content */}

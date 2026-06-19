@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toastShowError, toastShowSuccess } from "../../utils/Toast.js";
@@ -23,19 +23,25 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
         try {
             const userData = await authAPI.Login(companyID, password);
 
-            imageAPI.getProfileImage().then(async res => {
-                if (res.success) {
-                    setUserData(userData);
-                    setLoggedIn(true);
-                    toastShowSuccess("Logged In!.");
-                    navigate("/dashboard");
-                } else {
-                    toastShowError("Something Went Wrong!");
-                }
-            });
+            console.log("Logged In: ", userData)
+
+            const res = await imageAPI.getProfileImage();
+
+            if (res.success) {
+                setUserData(userData);
+                setLoggedIn(true);
+                toastShowSuccess("Logged In!");
+                navigate("/dashboard");
+            } else {
+                setUserData(null);
+                setLoggedIn(false);
+                toastShowError("Something Went Wrong!");
+            }
 
         } catch (err) {
-            toastShowError("User not found!");
+            setUserData(null)
+            setLoggedIn(false);
+            toastShowError("ER:Something Went Wrong!");
         } finally {
             setLoading(false);
         }

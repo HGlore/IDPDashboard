@@ -4,7 +4,7 @@ import Profile from './components/Profile'
 import DatePicker from './components/DatePicker'
 import RequestForEntry from './components/RequestForEntry'
 
-const Header = ({ userData, date, setDate, canRequest }) => {
+const Header = ({ userData, date, setDate, canRequest, setLoggedIn }) => {
 
     return (
         <div className='flex bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.4)] rounded-sm items-center justify-center'>
@@ -20,7 +20,7 @@ const Header = ({ userData, date, setDate, canRequest }) => {
                 <RequestForEntry setCanRequest={canRequest} />
                 <DatePicker date={date} setDate={setDate} />
                 <div className="w-px h-6 bg-gray-400 ml-2 mr-2"></div>
-                <Profile userData={userData} />
+                <Profile userData={userData} setLoggedIn={setLoggedIn} />
             </div>
         </div>
     )

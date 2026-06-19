@@ -2,8 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { MdCircle } from 'react-icons/md';
+import handleExecuterTime from '../../../../hooks/handleExecuterTime';
+import { Duration } from '../../../../utils/Duration';
 
-const BillerListView = ({ filteredStatus, prodList: billerList = [] }) => {
+const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListHandle }) => {
     const [direction, setDirection] = useState(1);
 
     const pageSize = 10;
@@ -36,6 +38,8 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [] }) => {
     useEffect(() => {
         setCurrentPage(1);
     }, [filteredStatus])
+
+    handleExecuterTime(updateListHandle, Duration.seconds(5), true);
 
     return (
         <AnimatePresence mode="wait">
@@ -89,6 +93,7 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [] }) => {
                             <motion.tr>
                                 {[
                                     "Row#",
+                                    "Name",
                                     "Company ID#",
                                     "Status",
                                     "Billed",
@@ -130,9 +135,10 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [] }) => {
                                             duration: 0.2,
                                             delay: index * 0.03,
                                         }}
-                                        className="group border-b last:border-none hover:bg-blue-50/40"
+                                        className="group border-b last:border-none hover:bg-blue-50/40 fullName"
                                     >
                                         <motion.td className='px-4 py-2 align-middle'> #{getListIndex(biller.companyID) + 1} </motion.td>
+                                        <motion.td className='px-4 py-2 align-middle'> {biller.fullName} </motion.td>
                                         <motion.td className='px-4 py-2 align-middle'> {biller.companyID} </motion.td>
                                         <motion.td className='px-4 py-2 text-center align-middle'>
                                             <motion.div className='flex justify-center'>
@@ -184,15 +190,13 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [] }) => {
                         onClick={() => {
                             setDirection(1);
                             setCurrentPage((p) => Math.min(p + 1, totalPages))
-                        }
-                        }
+                        }}
                         className={`w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 hover:scale-110 transition-all duration-200
                     ${currentPage === totalPages || billerList.length === 0
                                 ? "invisible" : ""}`}
                     >
                         <ArrowRight size={20} />
                     </motion.button>
-
                 </motion.div>
             </motion.div>
         </AnimatePresence>
