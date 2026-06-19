@@ -2,7 +2,7 @@ import ky from "ky";
 import { API_ENV } from "../utils/API";
 
 export const jsonAPI = ky.create({
-    prefixUrl: API_ENV.LOCAL_URL,
+    prefixUrl: API_ENV.BASE_URL,
     credentials: 'include',
     headers: {
         'Content-Type': 'application/json',
@@ -10,6 +10,6 @@ export const jsonAPI = ky.create({
 });
 
 export const noContentAPI = ky.create({
-    prefixUrl: API_ENV.LOCAL_URL,
+    prefixUrl: API_ENV.BASE_URL,
     credentials: 'include'
 });

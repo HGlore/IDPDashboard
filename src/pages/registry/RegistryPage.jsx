@@ -6,6 +6,7 @@ import { AtSign, Logs, UserPlus, UserPlus2 } from "lucide-react";
 import * as authAPI from "../../api/authAPI.js";
 import * as imageAPI from "../../api/imageAPI.js";
 import defaultPF from "./images/defaultPF.jpg"
+import imageCompression from 'browser-image-compression';
 
 const RegistryPage = ({ setUserData, setLoggedIn }) => {
     const navigate = useNavigate();
@@ -18,6 +19,11 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
     const [image, setImage] = useState(null);
     const [pickedProfile, setPickedProfile] = useState(null);
     const fileInputRef = useRef(null);
+
+    const imageFixSize = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1024,
+    };
 
     const handleRegistry = async () => {
         if (!companyID || !password || !regKey || !role || !fullname) {
@@ -33,7 +39,8 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
         setLoading(true);
 
         try {
-            const response = await authAPI.Register(fullname, companyID, password, role, regKey, pickedProfile);
+            const compressedFile = await imageCompression(pickedProfile, options);
+            const response = await authAPI.Register(fullname, companyID, password, role, regKey, compressedFile);
 
             if (response?.success) {
                 toastShowSuccess("Registered Successfully!");
