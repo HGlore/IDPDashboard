@@ -8,10 +8,11 @@ export default defineConfig({
         react(),
         tailwindcss()
     ],
+    base: "/idp/v1",
     build: {
         sourcemap: false,
     },
     esbuild: {
         sourcemap: false,
-    },
+    }
 })

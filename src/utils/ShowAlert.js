@@ -5,7 +5,7 @@ export const sweetShowMessage = async (icon, title, message, confirmButtonText, 
         icon: icon, // 'success', 'error', 'warning', 'info', 'question'
         title: title, // The main bold title
         html: message,
-        showCancelButton: true,
+        showCancelButton: cancelButtonText ? true : false,
         showConfirmButton: true,
         confirmButtonText: confirmButtonText,
         cancelButtonText: cancelButtonText

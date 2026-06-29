@@ -8,7 +8,7 @@ import * as imageAPI from "../../api/imageAPI.js";
 import defaultPF from "./images/defaultPF.jpg"
 import imageCompression from 'browser-image-compression';
 
-const RegistryPage = ({ setUserData, setLoggedIn }) => {
+const RegistryPage = ({ setIsRegistryPage }) => {
     const navigate = useNavigate();
     const [fullname, setFullname] = useState("");
     const [companyID, setUsername] = useState("");
@@ -23,6 +23,7 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
     const imageFixSize = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1024,
+        useWebWorker: true
     };
 
     const handleRegistry = async () => {
@@ -39,7 +40,7 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
         setLoading(true);
 
         try {
-            const compressedFile = await imageCompression(pickedProfile, options);
+            const compressedFile = await imageCompression(pickedProfile, imageFixSize);
             const response = await authAPI.Register(fullname, companyID, password, role, regKey, compressedFile);
 
             if (response?.success) {
@@ -82,7 +83,7 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
                 initial={{ opacity: 0, y: 40, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-120 bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl shadow-gray-400 border border-gray-100"
+                className="w-120 bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl shadow-gray-700 border border-gray-300"
             >
 
                 {/* Header */}
@@ -300,7 +301,10 @@ const RegistryPage = ({ setUserData, setLoggedIn }) => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.80 }}
-                        onClick={() => navigate("/")}
+                        onClick={() => {
+                            setIsRegistryPage(true);
+                            navigate("/");
+                        }}
                         className="font-extralight cursor-pointer text-sm text-cyan-600"
                     >
                         Sign In

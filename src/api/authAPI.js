@@ -22,7 +22,7 @@ export const Register = async (fullName, companyID, password, role, regKey, pick
     formData.append("role", role);
     formData.append("regKey", regKey);
     formData.append("profileImage", pickedProfile);
-
+    
     try {
         const response = await api.noContentAPI.post(`api/register`,
             {

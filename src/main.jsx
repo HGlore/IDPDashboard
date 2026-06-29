@@ -7,7 +7,7 @@ import Routing from './routing';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename='/idp/v1'>
       <Routing />
     </BrowserRouter>
   </StrictMode>,

@@ -38,6 +38,8 @@ const Profile = ({ userData, setLoggedIn }) => {
             imageAPI.getProfileImage().then(res => {
                 if (res.success) {
                     setImage(res.imageUrl);
+
+                    console.log("Image URL: ", res.imageUrl)
                 } else {
                     setLoggedIn(false);
                 }

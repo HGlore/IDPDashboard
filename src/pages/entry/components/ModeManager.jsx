@@ -6,10 +6,20 @@ import { MODE } from "../../../utils/Mode";
 const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
 
     const handleChangeMode = async (m) => {
-        const backup_entry = localStorage.getItem("orig_entry");
+        const backup_entry = JSON.parse(localStorage.getItem("orig_entry"));
+
+        const bckup_woutKey = {
+            ...backup_entry,
+            items: backup_entry.items.map(({ keyId, ...rest }) => rest)
+        }
+
+        const entry_woutKey = {
+            ...entry,
+            items: entry.items.map(({ keyId, ...rest }) => rest)
+        }
 
         if (mode === MODE.Entry && entry && backup_entry) {
-            if (JSON.stringify(entry) === backup_entry) {
+            if (JSON.stringify(entry_woutKey) === JSON.stringify(bckup_woutKey)) {
                 setMode(m);
                 setIsBrowse(true);
             } else {
@@ -22,7 +32,7 @@ const ModeManager = ({ mode, setMode, entry, setEntry, setIsBrowse }) => {
                 );
 
                 if (result.isConfirmed) {
-                    setEntry(documentDTO(JSON.parse(backup_entry)));
+                    setEntry(documentDTO(backup_entry));
                     setIsBrowse(true);
                     setMode(m);
                 } else {

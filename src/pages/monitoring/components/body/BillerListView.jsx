@@ -7,16 +7,23 @@ import { Duration } from '../../../../utils/Duration';
 
 const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListHandle }) => {
     const [direction, setDirection] = useState(1);
-
-    const pageSize = 10;
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(billerList.length / pageSize);
 
+    const pageRowSize = 10;
     const visibleBillers = billerList.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
+        (currentPage - 1) * pageRowSize,
+        currentPage * pageRowSize
     );
     const countShowing = visibleBillers.length;
+
+    const pageGroupSize = 5;
+    const totalPages = Math.ceil(billerList.length / pageRowSize);
+    const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+    const startPage = Math.floor((currentPage - 1) / pageGroupSize) * pageGroupSize + 1;
+    const visiblePages = pages.slice(
+        startPage - 1,
+        startPage - 1 + pageGroupSize
+    );
 
     const getStatusMaterial = (status) => {
         switch (status) {
@@ -76,7 +83,9 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListH
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                     className='
                 w-full
-                max-h-[69vh]
+                max-h-[65vh]
+                overflow-y-auto
+                overflow-x-hidden
                 rounded-sm
                 bg-white/70
                 backdrop-blur-md
@@ -88,7 +97,7 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListH
 
                         {/* Header */}
                         <motion.thead
-                            className=' bg-linear-to-r from-slate-100 to-slate-200 text-slate-600 uppercase text-xs tracking-wider'
+                            className=' bg-linear-to-r from-slate-100 to-slate-200 text-slate-600 uppercase text-xs'
                         >
                             <motion.tr>
                                 {[
@@ -135,7 +144,7 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListH
                                             duration: 0.2,
                                             delay: index * 0.03,
                                         }}
-                                        className="group border-b last:border-none hover:bg-blue-50/40 fullName"
+                                        className="group border-b last:border-none hover:bg-blue-50/40"
                                     >
                                         <motion.td className='px-4 py-2 align-middle'> #{getListIndex(biller.companyID) + 1} </motion.td>
                                         <motion.td className='px-4 py-2 align-middle'> {biller.fullName} </motion.td>
@@ -168,8 +177,7 @@ const BillerListView = ({ filteredStatus, prodList: billerList = [], updateListH
                         <ArrowLeft size={20} />
                     </motion.button>
 
-                    {[...Array(totalPages)].map((_, index) => {
-                        const page = index + 1;
+                    {visiblePages.map((page) => {
 
                         return (
                             <motion.button

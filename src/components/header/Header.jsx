@@ -3,17 +3,32 @@ import Search from './components/Search'
 import Profile from './components/Profile'
 import DatePicker from './components/DatePicker'
 import RequestForEntry from './components/RequestForEntry'
+import { Menu } from 'lucide-react'
+import { motion, scale } from 'framer-motion'
 
-const Header = ({ userData, date, setDate, canRequest, setLoggedIn }) => {
+const Header = ({ userData, date, setDate, canRequest, setLoggedIn, isLessWidth, visibleMenu, setVisibleMenu }) => {
 
     return (
         <div className='flex bg-white p-1 shadow-[0_0_15px_rgba(0,0,0,0.4)] rounded-sm items-center justify-center'>
-            <div className='hidden md:block ml-1'>
-                <h1 className='text-2xl font-black text-slate-800'>
-                    Welcome!!!
-                </h1>
-                <p className='font-serif'>Happy to see you!, Please enjoy!!!😊</p>
-            </div>
+
+            {
+                (isLessWidth && !visibleMenu) ?
+                    (<motion.div>
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            onClick={() => setVisibleMenu(true)}
+                            className='flex items-center justify-center hover:opacity-80 size-10 bg-slate-700 rounded-full cursor-pointer mr-3'>
+                            <Menu size={20} className='text-white' />
+                        </motion.button>
+                    </motion.div>)
+                    :
+                    (<div className='hidden md:block ml-1'>
+                        <h1 className='text-2xl font-black text-slate-800'>
+                            Welcome!!!
+                        </h1>
+                        <p className='font-serif'>Happy to see you!, Please enjoy!!!😊</p>
+                    </div>)
+            }
 
             {/* Search & Profile Site */}
             <div className='flex ml-auto items-center justify-center'>
@@ -22,7 +37,7 @@ const Header = ({ userData, date, setDate, canRequest, setLoggedIn }) => {
                 <div className="w-px h-6 bg-gray-400 ml-2 mr-2"></div>
                 <Profile userData={userData} setLoggedIn={setLoggedIn} />
             </div>
-        </div>
+        </div >
     )
 }
 

@@ -130,7 +130,7 @@ export default function ItemList({ itemList = [], imageURL, setEntry, isBrowse }
                                 "NMFC",
                                 "Action",
                             ].map((head) => (
-                                <th key={head} className="px-4 py-2 align-middle text-left font-semibold">
+                                <th key={head} className={`px-4 py-2 align-middle ${head === "Action" ? "text-center" : "text-left"} font-semibold`}>
                                     {head}
                                 </th>
                             ))}

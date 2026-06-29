@@ -42,9 +42,9 @@ const Dashboard = ({ date, userData, canRequest, ongoingDate, todaysDate }) => {
                 sweetShowMessage(
                     "warning",
                     "!Unfinished Entries!",
-                    `Can't proceed! You have unfinished entries!<br>Date: ${ongoingDate}`,
+                    `You have unfinished entries!<br>Date: ${ongoingDate}`,
                     "Ok",
-                    "Cancel"
+                    "Close"
                 );
             }
         }

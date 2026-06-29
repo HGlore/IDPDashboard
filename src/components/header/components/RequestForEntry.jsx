@@ -16,7 +16,7 @@ const RequestForEntry = ({ setCanRequest: canRequest }) => {
                     window.location.reload();
                 } else {
                     await sweetShowMessage("info", "No Images!",
-                        "No available images to request!", "Ok", "-----");
+                        "No available images to request!", "Ok");
                 }
 
             } catch (error) {

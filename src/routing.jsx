@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { use, useEffect, useState } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
-import SideNavBar from './components/sidebar/SideBar';
+import SideNavBar from './components/sidebar/components/monitoring/SideBar.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import LoginPage from './pages/login/LoginPage.jsx';
 import LoadingModal from './components/LoadingModal';
@@ -16,28 +16,36 @@ import { API_ENV } from './utils/API.js';
 import * as requestAPI from './api/requestAPI.js'
 import Monitoring from './pages/monitoring/Monitoring.jsx';
 import RegistryPage from './pages/registry/RegistryPage.jsx';
+import UsersPage from './pages/users/UsersPage.jsx';
 
 const Routing = () => {
     const today = new Date().toISOString().split("T")[0];
     const [date, setDate] = useState(today);
     const [ongoingDate, setOngoingDate] = useState(null);
     const [canRequest, setCanRequest] = useState(false);
+    const [isRegistryPage, setIsRegistryPage] = useState(true)
 
     const [loggedIn, setLoggedin] = useState(false);
     const [loading, setloading] = useState(true);
     const [userData, setUserData] = useState(null);
     const [entryData, setEntryData] = useState(null);
     const [dashboardData, setDashboardData] = useState(null);
+    const [isLessWidth, setIsLessWidth] = useState(window.innerWidth < 640 ? true : false);
+    const [visibleMenu, setVisibleMenu] = useState(false);
 
     localStorage.setItem("date", date);
 
-    {/* useEffect(() => {
-       CheckAuth().then(({ loggedIn }) => {
-       setLoggedin(loggedIn);
-       setloading(false);
-      });
-   }, []);*/
-    }
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLessWidth(window.innerWidth < 640 ? true : (setIsLessWidth(false), setVisibleMenu(false)));
+        };
+
+        window.addEventListener("resize", handleResize)
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [])
 
     useEffect(() => {
         const check = async () => {
@@ -95,16 +103,17 @@ const Routing = () => {
         <Toaster />
         <Routes>
             <Route path="/" element={loggedIn ? (<Navigate to="/dashboard" replace />) : (
-                <LoginPage setUserData={setUserData} setLoggedIn={setLoggedin} />)} />
-            <Route path="/register" element={<RegistryPage />} />
+                <LoginPage setUserData={setUserData} setLoggedIn={setLoggedin} setIsRegistryPage={setIsRegistryPage} />)} />
+            <Route path="/register" element={isRegistryPage ? (<Navigate to="/" replace />) : (<RegistryPage setIsRegistryPage={setIsRegistryPage} />)} />
             <Route element={<ProtectedRoute loggedIn={loggedIn} />}>
                 {userData?.role === "Entry" ? (
-                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} setLoggedIn={setLoggedin} />}>
+                    <Route element={<EntrySideNavBar userData={userData} date={date} setDate={setDate} canRequest={canRequest} setLoggedIn={setLoggedin} isLessWidth={isLessWidth} visibleMenu={visibleMenu} setVisibleMenu={setVisibleMenu} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} ongoingDate={ongoingDate} todaysDate={today} />} />
                         <Route path='/entry' element={<EntryPage canRequest={canRequest} date={date} ongoingDate={ongoingDate} todaysDate={today} />} />
-                    </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} setLoggedIn={setLoggedin} />}>
+                    </Route>) : (<Route element={<SideNavBar userData={userData} date={date} setDate={setDate} setLoggedIn={setLoggedin} isLessWidth={isLessWidth} visibleMenu={visibleMenu} setVisibleMenu={setVisibleMenu} />}>
                         <Route path="/dashboard" element={<Dashboard date={date} userData={userData} canRequest={canRequest} />} />
                         <Route path='/monitoring' element={<Monitoring date={date} />} />
+                        <Route path='/users' element={<UsersPage />} />
                         <Route path='/entry' />
                     </Route>)}
             </Route>

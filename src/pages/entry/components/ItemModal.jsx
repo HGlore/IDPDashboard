@@ -223,7 +223,7 @@ const ItemModal = ({ isOpen, onClose, onSave, mode = "add", itemData, imageURL, 
                                 <div className="flex gap-2">
                                     <button onClick={onClose}
                                         className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
-                                        Cancel
+                                        {mode == "view" ? "Close" : "Cancel"}
                                     </button>
                                     {mode !== "view" && (
                                         <button disabled={isBrowse} onClick={handleSubmit}

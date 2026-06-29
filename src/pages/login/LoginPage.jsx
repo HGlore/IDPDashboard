@@ -6,7 +6,7 @@ import { Database } from "lucide-react";
 import * as authAPI from "../../api/authAPI.js";
 import * as imageAPI from "../../api/imageAPI.js";
 
-const LoginPage = ({ setUserData, setLoggedIn }) => {
+const LoginPage = ({ setUserData, setLoggedIn, setIsRegistryPage }) => {
     const navigate = useNavigate();
     const [companyID, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -22,8 +22,6 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
 
         try {
             const userData = await authAPI.Login(companyID, password);
-
-            console.log("Logged In: ", userData)
 
             const res = await imageAPI.getProfileImage();
 
@@ -41,7 +39,7 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
         } catch (err) {
             setUserData(null)
             setLoggedIn(false);
-            toastShowError("ER:Something Went Wrong!");
+            toastShowError("User not Found!");
         } finally {
             setLoading(false);
         }
@@ -165,7 +163,10 @@ const LoginPage = ({ setUserData, setLoggedIn }) => {
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.80 }}
-                        onClick={() => navigate("/register")}
+                        onClick={() => {
+                            setIsRegistryPage(false);
+                            navigate("/register");
+                        }}
                         className="font-extralight cursor-pointer text-sm text-cyan-600"
                     >
                         Sign Up
