@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { MdLogout, MdSettings, MdSettingsCell } from 'react-icons/md';
 import * as authApi from "../../../api/authAPI"
 import { sweetShowMessage } from '../../../utils/ShowAlert';
+import Settings from '../../settings/Settings';
 
 const DrawerLog = () => {
-
+    const [isSettingOpen, setIsSettingOpen] = useState(false);
     const [hover, setHover] = useState("");
 
     const handleLogout = async () => {
@@ -29,6 +30,7 @@ const DrawerLog = () => {
             className="absolute right-0 mt-3 w-36 bg-white shadow-lg rounded border border-gray-200 z-50"
         >
             <button
+                onClick={() => setIsSettingOpen(true)}
                 onMouseEnter={() => setHover("setting")}
                 onMouseLeave={() => setHover("")}
                 className='w-full flex items-center p-2 opacity-65 hover:opacity-100 hover:bg-gray-100 rounded'
@@ -46,7 +48,12 @@ const DrawerLog = () => {
                 <MdLogout className={`text-gray-500 ${hover == "logout" ? "text-red-500" : ""} `} size={20} />
                 <span className='ml-2 text-sm text-slate-700 font-medium'>Logout</span>
             </button>
-        </div>
+
+            <Settings
+                isOpen={isSettingOpen}
+                onClose={() => setIsSettingOpen(false)}
+            />
+        </div >
     );
 };
 

@@ -148,8 +148,6 @@ const EntryPage = ({ canRequest, date, ongoingDate, todaysDate }) => {
 
         const response = await entriesAPI.entriesData({ id: entryID, date });
 
-
-
         setEntry(documentDTO(response));
         localStorage.setItem("orig_entry", JSON.stringify(documentDTO(response)));
         fetchStartTimeNow();
